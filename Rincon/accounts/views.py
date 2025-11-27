@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
-from .forms import Registrar_Form
+from ..forms import Registrar_Form
 from django.contrib.auth.forms import AuthenticationForm
 
 def registrar_view(request):
