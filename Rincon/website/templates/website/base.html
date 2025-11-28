@@ -1,30 +1,81 @@
+{%load static%}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rincon | home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <link rel="stylesheet" href="{% static 'website/css/base.css' %}">
 </head>
-<body class="bg-gray-50">
 
-    <!-- NAVBAR -->
-    <nav class="bg-white shadow-md py-4 px-8 flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Rincon</h1>
+<body>
+    <header class="navbar">
+        <h1 class="logo">Rincon</h1>
+        <nav>
+            <a href="#inicio">Inicio</a>
+            <a href="#sobre">Sobre Nosotros</a>
+            <a href="#galeria">Galería</a>
+            <a href="#registro">Registrarse</a>
+        </nav>
+    </header>
 
-        <ul class="flex space-x-6 text-lg">
-            <li><a href="{% url 'base' %}" class="hover:text-blue-500">Inicio</a></li>
-            <li><a href="{% url 'about' %}" class="hover:text-blue-500">Sobre Nosotros</a></li>
-            <li><a href="{% url 'gallery' %}" class="hover:text-blue-500">Galería</a></li>
-            <li><a href="{% url 'register' %}" class="hover:text-blue-500">Registrarse</a></li>
-        </ul>
-    </nav>
-
-    <!-- Contenido cambiante -->
-    <div class="p-8">
-        {% block content %}
-        {% endblock %}
+    <div>
+        <img class="base_backroundimg_1" src="{% static 'website\images\base_image_1.png' %}" alt="backroundimg_1">
     </div>
 
+    <main>
+        <div class="introduccion">
+            <div class="intro_text">
+                <h2 class="intro_title">Bienvenido a Rincón</h2>
+                <p class="intro_desc">
+                    Creamos espacios únicos que combinan estilo, simplicidad y funcionalidad.
+                    Rediseñá tu hogar con asesoramiento profesional y accesible.
+                </p>
+                <a href="#registro" class="intro_btn">Comenzar</a>
+            </div>
+            <div class="collage_introduccion">
+                <div class="item_1">
+                    <img class="collage_1" src="{% static 'website/images/collage_1.jpeg' %}" alt="">
+                </div>
+
+                <div class="item_2">
+                    <img class="collage_2" src="{% static 'website/images/collage_2.jpeg' %}" alt="">
+                </div>
+
+                <div class="item_3">
+                    <img class="collage_3" src="{% static 'website/images/collage_3.jpeg' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="inicio" class="section hero">
+        <h2>Bienvenido a Rincon</h2>
+        <p>Diseño interior moderno, personalizado y accesible.</p>
+        <a href="#registro" class="btn">Comenzar</a>
+    </section>
+
+
+    <section id="sobre" class="section">
+        <h2>Sobre Nosotros</h2>
+        <p>Somos un equipo dedicado a transformar espacios en experiencias únicas.</p>
+        <a href="#registro" class="btn">Saber más</a>
+    </section>
+
+
+    <section id="galeria" class="section">
+        <h2>Galería</h2>
+        <p>Descubre algunos de nuestros proyectos más destacados.</p>
+        <a href="#registro" class="btn">Ver más</a>
+    </section>
+
+
+    <section id="registro" class="section">
+        <h2>Registrarse</h2>
+        <p>Únete y obtené acceso a recomendaciones personalizadas.</p>
+        <a href="#" class="btn">Crear cuenta</a>
+    </section>
 </body>
+
 </html>
