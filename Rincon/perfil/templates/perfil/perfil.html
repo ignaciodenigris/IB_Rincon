@@ -1,0 +1,38 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'perfil/css/perfil.css' %}">
+
+<div class="perfil-container">
+
+    <h2 class="titulo">Tu Perfil</h2>
+
+    <div class="perfil-info">
+
+        <div class="tarjeta usuario">
+            <h3>Información Personal</h3>
+            <p><strong>Usuario:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+        </div>
+
+        <div class="tarjeta preferencias">
+            <h3>Tus Preferencias</h3>
+
+            {% if preferencias %}
+                <p><strong>Estilo favorito:</strong> {{ preferencias.estilo }}</p>
+                <p><strong>Colores preferidos:</strong> {{ preferencias.colores }}</p>
+                <p><strong>Ambientes favoritos:</strong> {{ preferencias.ambientes }}</p>
+            {% else %}
+                <p>No completaste tus preferencias.</p>
+                <a href="" class="btn">Completar ahora</a>
+            {% endif %}
+        </div>
+
+        <div class="tarjeta accesos">
+            <h3>Accesos Rápidos</h3>
+
+            <a href="" class="btn">Actualizar preferencias</a>
+            <a href="#" class="btn">Ver recomendaciones</a>
+            <a href="#" class="btn">Chats con proveedores</a>
+        </div>
+
+    </div>
+</div>

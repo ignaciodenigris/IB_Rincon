@@ -32,6 +32,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'website',
+    'cuentas',
+    'perfil',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -98,7 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTH_USER_MODEL = "cuentas.Usuario"
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
