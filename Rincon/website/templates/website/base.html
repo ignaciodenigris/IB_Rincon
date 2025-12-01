@@ -18,7 +18,7 @@
             <a href="#galeria">Galería</a>
             {% if user.is_authenticated %}
             <a href="/perfil/">Mi Perfil</a>
-            <a href="/logout/">Cerrar sesión</a>
+            <img src="{{ user.foto_perfil.url }}" class="foto-perfil">
             {% else %}
             <a href="/registro/">Registrarse</a>
             <a href="/login/">Iniciar sesión</a>

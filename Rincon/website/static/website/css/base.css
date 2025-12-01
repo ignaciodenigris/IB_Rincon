@@ -21,6 +21,12 @@ top: 0;
 z-index: 100;
 }
 
+.nav-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 /* introduccion */
 
 .introduccion{

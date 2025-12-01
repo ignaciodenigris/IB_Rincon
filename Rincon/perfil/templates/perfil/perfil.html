@@ -9,6 +9,8 @@
 
         <div class="tarjeta usuario">
             <h3>Información Personal</h3>
+            <img src="{{ user.imagen_perfil.url }}" class="foto-perfil">
+            <a href="{% url 'cuentas:actualizar_foto' %}">Cambiar foto</a>
             <p><strong>Usuario:</strong> {{ user.username }}</p>
             <p><strong>Email:</strong> {{ user.email }}</p>
         </div>
@@ -17,12 +19,12 @@
             <h3>Tus Preferencias</h3>
 
             {% if preferencias %}
-                <p><strong>Estilo favorito:</strong> {{ preferencias.estilo }}</p>
-                <p><strong>Colores preferidos:</strong> {{ preferencias.colores }}</p>
-                <p><strong>Ambientes favoritos:</strong> {{ preferencias.ambientes }}</p>
+            <p><strong>Estilo favorito:</strong> {{ preferencias.estilo }}</p>
+            <p><strong>Colores preferidos:</strong> {{ preferencias.colores }}</p>
+            <p><strong>Ambientes favoritos:</strong> {{ preferencias.ambientes }}</p>
             {% else %}
-                <p>No completaste tus preferencias.</p>
-                <a href="" class="btn">Completar ahora</a>
+            <p>No completaste tus preferencias.</p>
+            <a href="" class="btn">Completar ahora</a>
             {% endif %}
         </div>
 

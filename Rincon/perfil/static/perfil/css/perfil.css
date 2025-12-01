@@ -4,6 +4,14 @@
     text-align: center;
 }
 
+/* Foto de prefil */
+.foto-perfil {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .titulo {
     font-size: 2.2rem;
     margin-bottom: 2rem;
