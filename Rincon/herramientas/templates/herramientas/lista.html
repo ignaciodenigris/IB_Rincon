@@ -1,0 +1,38 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'herramientas/css/lista.css' %}">
+
+<div class="proyectos-container">
+    <h1>Proyectos Disponibles</h1>
+
+    <div class="proyectos-grid">
+
+        {% for proyecto in proyectos %}
+        <div class="proyecto-card">
+
+            <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+
+            <div class="proyecto-info">
+                <h2>{{ proyecto.titulo }}</h2>
+                <h3>{{ proyecto.subtitulo }}</h3>
+                <p>{{ proyecto.descripcion }}</p>
+
+                <div class="proyecto-precio">
+                    ${{ proyecto.precio }}
+                </div>
+
+                <div class="card-botones">
+                    <a href="#" class="btn-ver">Ver</a>
+
+                    {% if user.is_staff %}
+                    <a href="#" class="btn-editar">Editar</a>
+                    <a href="#" class="btn-borrar">Borrar</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+

@@ -1,0 +1,14 @@
+{% extends "website/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="detalle">
+    <img src="{{ proyecto.imagen.url }}" class="img-detalle">
+
+    <div class="info-detalle">
+        <h1>{{ proyecto.titulo }}</h1>
+        <p>{{ proyecto.descripcion }}</p>
+        <p><strong>Precio:</strong> ${{ proyecto.precio }}</p>
+    </div>
+</div>
+{% endblock %}

@@ -6,7 +6,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('website.urls')),
     path('cuentas/', include('cuentas.urls')),
-    path('perfil/', include('perfil.urls')),  # ← Conecta tu app "website"
+    path('perfil/', include('perfil.urls')), 
+    path('herramientas/', include('herramientas.urls')),
 ]
 
 if settings.DEBUG:

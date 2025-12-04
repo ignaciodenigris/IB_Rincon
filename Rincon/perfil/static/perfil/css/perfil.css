@@ -1,58 +1,195 @@
-.perfil-container {
-    width: 80%;
-    margin: 4rem auto;
-    text-align: center;
+
+.nav-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform .15s ease;
 }
 
-/* Foto de prefil */
-.foto-perfil {
-    width: 120px;
-    height: 120px;
+.nav-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* Si tenés enlaces sueltos arriba */
+a {
+    text-decoration: none;
+    color: #333;
+    margin-right: 12px;
+    font-weight: 500;
+    transition: .2s;
+}
+
+a:hover {
+    color: #111;
+}
+
+
+/* =======================
+   CONTENEDOR PRINCIPAL
+   ======================= */
+
+.perfil-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: "Inter", sans-serif;
+}
+
+
+/* =======================
+   HEADER DEL PERFIL
+   ======================= */
+
+.perfil-header-row {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.perfil-avatar-wrap {
+    flex-shrink: 0;
+}
+
+.perfil-avatar {
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+
+.perfil-header h1 {
+    font-size: 2.4rem;
+    margin: 0;
+    color: #222;
+}
+
+.perfil-header p {
+    margin-top: 6px;
+    color: #666;
+    font-size: 1rem;
+}
+
+
+/* =======================
+   BOTONES DEL PERFIL
+   ======================= */
+
+.btn-editar-foto,
+.btn-editar-pref,
+.btn-completar {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background-color: #111;
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.25s ease;
+    margin-top: 10px;
+}
+
+.btn-editar-foto:hover,
+.btn-editar-pref:hover,
+.btn-completar:hover {
+    background-color: #333;
+}
+
+
+/* =======================
+   SECCIÓN DE PREFERENCIAS
+   ======================= */
+
+.preferencias-box {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 25px 30px;
+    margin-bottom: 40px;
+    box-shadow: 0px 3px 12px rgba(0,0,0,0.1);
+}
+
+.preferencias-box h2 {
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: #222;
+}
+
+.preferencias-box ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.preferencias-box li {
+    margin-bottom: 6px;
+    font-size: 1rem;
+}
+
+
+/* =======================
+   SECCIÓN RECOMENDACIONES
+   ======================= */
+
+.recomendaciones-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    color: #222;
+}
+
+/* Reutiliza estilos de lista.css (grid y cards) */
+
+/* Aumentamos coherencia visual */
+.proyecto-card {
+    border-radius: 14px !important;
+}
+
+.proyecto-card img {
+    height: 220px;
     object-fit: cover;
 }
 
-.titulo {
-    font-size: 2.2rem;
-    margin-bottom: 2rem;
+.btn-ver {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #1e88e5;
+    color: #fff;
+}
+
+.btn-fav {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #eee;
+    border: none;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.btn-fav:hover {
+    background: #ddd;
+}
+
+.btn-editar {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #ffcc00;
     color: #333;
 }
 
-.perfil-info {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
-}
-
-.tarjeta {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    text-align: left;
-}
-
-.tarjeta h3 {
-    color: #444;
-    margin-bottom: 1rem;
-}
-
-.tarjeta p {
-    margin: 0.4rem 0;
-    color: #555;
-}
-
-.btn {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.7rem 1.2rem;
-    background: black;
+.btn-borrar {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #e53935;
     color: white;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: 0.2s;
 }
 
-.btn:hover {
-    opacity: 0.7;
+.btn-editar:hover {
+    background: #e0b400;
+}
+
+.btn-borrar:hover {
+    background: #c62828;
 }

@@ -1,0 +1,10 @@
+<h2>Crear nueva herramienta</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+</form>
+
+<a href="{% url 'lista_proyectos' %}">Volver a la lista</a>

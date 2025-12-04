@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class Preferencias(models.Model):
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     estilo_favorito = models.CharField(
         max_length=50,
