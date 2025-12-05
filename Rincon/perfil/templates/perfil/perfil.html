@@ -39,10 +39,12 @@
         </ul>
 
         <a href="{% url 'cuestionario' %}" class="btn-editar-pref">Editar preferencias</a>
+        <a href="{% url 'mensajeria' %}">Mensajes</a>
     </div>
     {% else %}
         <p>No completaste tu perfil aún.</p>
         <a href="{% url 'cuestionario' %}" class="btn-completar">Completar cuestionario</a>
+        
     {% endif %}
 
     <!-- Recomendaciones -->

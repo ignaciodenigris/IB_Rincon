@@ -8,6 +8,7 @@ urlpatterns = [
     path('cuentas/', include('cuentas.urls')),
     path('perfil/', include('perfil.urls')), 
     path('herramientas/', include('herramientas.urls')),
+    path('mensajeria/', include('mensajeria.urls')),
 ]
 
 if settings.DEBUG:
