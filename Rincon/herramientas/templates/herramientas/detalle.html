@@ -1,14 +1,51 @@
-{% extends "website/base.html" %}
 {% load static %}
 
-{% block content %}
-<div class="detalle">
-    <img src="{{ proyecto.imagen.url }}" class="img-detalle">
+<link rel="stylesheet" href="{% static 'herramientas/css/detalle.css' %}">
 
-    <div class="info-detalle">
+<div class="detalle-container">
+
+    <div class="detalle-img">
+        <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+    </div>
+
+    <div class="detalle-info">
+
         <h1>{{ proyecto.titulo }}</h1>
-        <p>{{ proyecto.descripcion }}</p>
-        <p><strong>Precio:</strong> ${{ proyecto.precio }}</p>
+
+        {% if proyecto.subtitulo %}
+            <h3 class="subtitulo">{{ proyecto.subtitulo }}</h3>
+        {% endif %}
+
+        <p class="categoria">Categoría: <strong>{{ proyecto.categoria }}</strong></p>
+
+        <p class="descripcion">{{ proyecto.descripcion }}</p>
+
+        <p class="precio">${{ proyecto.precio }}</p>
+
+        <div class="botones">
+
+            <!-- Favoritos -->
+            {% if user.is_authenticated %}
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <button class="btn-fav">
+                    {% if es_favorito %}
+                        ❤️ Guardado
+                    {% else %}
+                        🤍 Guardar
+                    {% endif %}
+                </button>
+            </form>
+            {% endif %}
+
+            <!-- CRUD admin -->
+            {% if user.is_staff %}
+                <a class="btn-editar" href="{% url 'editar_proyecto' proyecto.id %}">Editar</a>
+                <a class="btn-borrar" href="{% url 'eliminar_proyecto' proyecto.id %}">Eliminar</a>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'lista_proyectos' %}" class="btn-volver">Volver</a>
+
     </div>
 </div>
-{% endblock %}

@@ -3,7 +3,24 @@
 
 <div class="proyectos-container">
     <h1>Proyectos Disponibles</h1>
+<form method="GET" class="filtros">
 
+    <input type="text" name="buscar" placeholder="Buscar..." value="{{ request.GET.buscar }}">
+
+    <select name="categoria">
+        <option value="todas">Todas las categorías</option>
+        <option value="living">Living</option>
+        <option value="cocina">Cocina</option>
+        <option value="banio">Baño</option>
+        <option value="dormitorio">Dormitorio</option>
+        <option value="oficina">Oficina</option>
+        <option value="exterior">Exterior</option>
+    </select>
+
+    <input type="number" name="precio_max" placeholder="Precio máximo" value="{{ request.GET.precio_max }}">
+
+    <button type="submit">Filtrar</button>
+</form>
     <div class="proyectos-grid">
 
         {% for proyecto in proyectos %}
@@ -21,11 +38,11 @@
                 </div>
 
                 <div class="card-botones">
-                    <a href="#" class="btn-ver">Ver</a>
+                    <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver">Ver</a>
 
                     {% if user.is_staff %}
-                    <a href="#" class="btn-editar">Editar</a>
-                    <a href="#" class="btn-borrar">Borrar</a>
+                    <a href="{% url 'editar_proyecto' proyecto.id %}" class="btn-editar">Editar</a>
+                    <a href="{% url 'eliminar_proyecto' proyecto.id %}" class="btn-borrar">Borrar</a>
                     {% endif %}
                 </div>
             </div>

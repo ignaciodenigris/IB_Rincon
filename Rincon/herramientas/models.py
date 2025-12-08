@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 CATEGORIAS = [
     ('living', 'Living'),
@@ -17,7 +18,19 @@ class Proyecto(models.Model):
     imagen = models.ImageField(upload_to='proyectos/')
     categoria = models.CharField(max_length=50, choices=CATEGORIAS, default='living')
 
-    creado = models.DateTimeField(auto_now_add=True)
+
+    creador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="proyectos_creados"
+    )
+
+
+    favoritos = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="proyectos_favoritos",
+        blank=True    )
 
     def __str__(self):
         return self.titulo
+    
