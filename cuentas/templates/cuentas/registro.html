@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'cuentas/css/registro.css' %}">
+    <title>Rincon | Registrate</title>
+</head>
+
+<body>
+
+    <div class="registro-container">
+        <div class="registro-box">
+
+            <h2>Crear Cuenta</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <!-- Renderizamos campo por campo para poder estilizarlo mejor -->
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        <p style="color: red; font-size: 13px;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    <!-- errores por campo -->
+                    {% for error in field.errors %}
+                        <p style="color: red; font-size: 13px;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <button class="btn-registrarse" type="submit">Registrarme</button>
+            </form>
+
+            <p class="registro-texto">¿Ya tenés cuenta?
+                
+            </p>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
