@@ -1,0 +1,49 @@
+/* NAVBAR */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--surface, #fff);
+    border-bottom: 1px solid var(--border, #e5e5e5);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+.navbar nav { display: flex; gap: 1rem; align-items: center; }
+
+.navbar nav a.nav-link { margin-left: 0; text-decoration: none; color: var(--text); }
+
+.foto-perfil {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+.navbar nav a {
+    margin-left: 0; /* spacing handled by gap */
+    text-decoration: none;
+    color: var(--text);
+    transition: color 0.15s ease;
+}
+
+.navbar nav a:hover { color: var(--accent); }
+
+@media (max-width: 700px){
+    .navbar { padding: 0.6rem 1rem; }
+    .logo { font-size: 1.2rem; }
+    .navbar nav { gap: 0.6rem; }
+}

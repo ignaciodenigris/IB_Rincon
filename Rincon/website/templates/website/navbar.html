@@ -1,0 +1,22 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'website/css/navbar_0.01.css' %}">
+<header class="navbar">
+    <h1 class="logo">Rincon</h1>
+
+    <nav>
+        <a href="{% url 'base' %}">Inicio</a>
+        <a href="#sobre">Sobre Nosotros</a>
+        <a href="#galeria">Galería</a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'perfil' %}" class="nav-link">Mi Perfil</a>
+
+            <img src="{{ user.imagen_perfil.url }}"
+                 class="foto-perfil"
+                 alt="Foto de perfil">
+        {% else %}
+            <a href="{% url 'cuentas:registro' %}">Registrarse</a>
+            <a href="{% url 'cuentas:login' %}">Iniciar sesión</a>
+        {% endif %}
+    </nav>
+</header>

@@ -1,0 +1,67 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'mensajeria/css/chat.css' %}">
+
+<div class="chat-container">
+
+    <!-- PANEL IZQUIERDO — lista de chats -->
+    <div class="chat-sidebar">
+        <h2>Mensajes</h2>
+
+        {% if conversaciones %}
+            {% for conv in conversaciones %}
+                <a href="{% url 'mensajeria' conv.id %}" 
+                   class="chat-item {% if conversacion_activa and conv.id == conversacion_activa.id %}activo{% endif %}">
+
+                    <div class="chat-item-header">
+                        {% if user.is_staff %}
+                            <strong>{{ conv.cliente.username }}</strong>
+                        {% else %}
+                            <strong>Administrador</strong>
+                        {% endif %}
+                    </div>
+
+                    <div class="chat-item-sub">
+                        Último mensaje: {{ conv.actualizado|date:"H:i" }}
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p class="no-chats">No tenés conversaciones aún.</p>
+        {% endif %}
+    </div>
+
+    <!-- PANEL DERECHO — conversación -->
+    <div class="chat-main">
+        {% if conversacion_activa %}
+            <div class="chat-header">
+                {% if user.is_staff %}
+                    Chateando con <strong>{{ conversacion_activa.cliente.username }}</strong>
+                {% else %}
+                    Chateando con <strong>{{ conversacion_activa.admin.username }}</strong>
+                {% endif %}
+            </div>
+
+            <div class="chat-messages">
+                {% for mensaje in conversacion_activa.mensajes.all %}
+                    <div class="mensaje-bubble {% if mensaje.remitente == user %}propio{% else %}otro{% endif %}">
+                        <p>{{ mensaje.contenido }}</p>
+                        <span class="hora">{{ mensaje.fecha|date:"H:i" }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <form method="POST" class="chat-form">
+                {% csrf_token %}
+                <input type="text" name="mensaje" placeholder="Escribe un mensaje..." required>
+                <button type="submit">Enviar</button>
+            </form>
+
+        {% else %}
+            <div class="sin-chat">
+                <p>Elegí una conversación para empezar a chatear.</p>
+            </div>
+        {% endif %}
+    </div>
+
+</div>

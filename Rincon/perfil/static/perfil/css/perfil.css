@@ -1,0 +1,282 @@
+/* ===== CONTENEDOR GENERAL ===== */
+.perfil-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: "Inter", system-ui, sans-serif;
+    color: #222;
+}
+
+/* ===== HEADER PERFIL ===== */
+.perfil-header-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.perfil-avatar-wrap {
+    flex-shrink: 0;
+}
+
+.perfil-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e5e5e5;
+}
+
+.perfil-header h1 {
+    font-size: 2rem;
+    margin-bottom: 6px;
+}
+
+.perfil-header p {
+    color: #666;
+}
+
+/* ===== SECCIONES ===== */
+.preferencias-box,
+.guardados-section,
+.recomendaciones-section {
+    margin-bottom: 60px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* ===== PREFERENCIAS ===== */
+.preferencias-box {
+    background: #fafafa;
+    padding: 24px;
+    border-radius: 14px;
+    border: 1px solid #eee;
+}
+
+/* Caja de configuraciones: estilo parecido a preferencias */
+.foto-box {
+    background: #fafafa;
+    padding: 24px;
+    border-radius: 14px;
+    border: 1px solid #eee;
+    margin-bottom: 40px;
+}
+
+.foto-box h2 {
+    margin-bottom: 16px;
+}
+
+/* Grid/columns para Cuenta y Herramientas */
+.foto-box-inner.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.config-section,
+.admin-tools {
+    background: transparent;
+    padding: 0;
+    border-radius: 10px;
+}
+
+.config-section h3,
+.admin-tools h3 {
+    margin-bottom: 12px;
+}
+
+/* Herramientas y Cuenta con su propio contenedor de botones */
+.tools-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Responsive: apilar columnas en pantallas pequeñas */
+@media (max-width: 768px) {
+    .foto-box-inner.config-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.preferencias-box ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.preferencias-box li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
+
+.btn-editar-pref,
+.btn-completar {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 20px;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* Botón negro reutilizable: igual que "Editar preferencias" */
+.btn-negro {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 20px;
+    background: #111;
+    color: white;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+}
+
+/* ===== GRID PROYECTOS ===== */
+.proyectos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+/* ===== CARD PROYECTO ===== */
+.proyecto-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    transition: 0.25s ease;
+}
+
+.proyecto-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.proyecto-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* ===== INFO PROYECTO ===== */
+.proyecto-info {
+    padding: 16px;
+}
+
+.proyecto-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.proyecto-info h4 {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.proyecto-info p {
+    font-size: 0.85rem;
+    color: #555;
+    margin-bottom: 12px;
+}
+
+.proyecto-precio {
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* ===== BOTONES CARD ===== */
+.card-botones {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.btn-ver {
+    padding: 8px 14px;
+    border-radius: 20px;
+    background: #111;
+    color: white;
+    font-size: 0.8rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.btn-fav {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid #111;
+    background: white;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.btn-fav:hover {
+    background: #111;
+    color: white;
+}
+
+/* Pequeños ajustes para el icono y estado accesible del favorito */
+.btn-fav .heart {
+    margin-right: 8px;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.btn-fav[aria-pressed="true"] {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+/* Alinea altura y centrado de botones de acción */
+.btn-fav,
+.btn-ver,
+.btn-negro {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Espaciado reutilizable para listas de acciones (configuración, etc.) */
+.action-list {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Asegura que formularios dentro de action-list no estiren demasiado */
+.action-list .logout-form {
+    margin: 0;
+}
+
+/* ===== TEXTO VACÍO ===== */
+.empty-text {
+    color: #777;
+    font-size: 0.95rem;
+    margin-top: 10px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .perfil-header-row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .perfil-avatar {
+        width: 100px;
+        height: 100px;
+    }
+}

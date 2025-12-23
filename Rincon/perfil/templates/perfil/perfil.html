@@ -1,0 +1,124 @@
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'perfil/css/perfil.css' %}">
+{% include "website/navbar.html" %}
+<div class="perfil-container">
+ 
+    <!-- Header: avatar + saludo -->
+    <div class="perfil-header-row">
+        <div class="perfil-avatar-wrap">
+            {% if user.is_authenticated %}
+                {% if user.foto_perfil %}
+                    <img src="{{ user.foto_perfil.url }}" alt="{{ user.username }}" class="perfil-avatar">
+                {% elif user.imagen_perfil %}
+                    <img src="{{ user.imagen_perfil.url }}" alt="{{ user.username }}" class="perfil-avatar">
+                {% else %}
+                    <img src="{% static 'perfil/images/default_profile.png' %}" alt="default" class="perfil-avatar">
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="perfil-header">
+            <h1>Hola, {{ request.user.username }}</h1>
+            <p>Este es tu espacio personal dentro de Rincon.</p>
+        </div>
+    </div>
+
+    <!-- Caja de configuraciones dividida -->
+    <div class="foto-box">
+        <h2>Configuraciones</h2>
+        <div class="foto-box-inner config-grid">
+            <div class="config-section">
+                <h3>Cuenta</h3>
+                    <div class="action-list">
+                    <a href="{% url 'cuentas:actualizar_foto' %}" class="action-btn action-btn--small btn-negro">Cambiar foto de perfil</a>
+                    <a href="{% url 'mensajeria' %}" class="action-btn action-btn--xsmall btn-negro">Mensajería</a>
+                    <form class="logout-form" action="{% url 'logout' %}" method="post" style="width:100%;">
+                        {% csrf_token %}
+                        <button class="action-btn btn-negro" type="submit">Cerrar sesión</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="admin-tools">
+                {% if user.is_staff %}
+                    <h3>Herramientas</h3>
+                        <div class="tools-buttons">
+                        <a class="action-btn btn-negro" href="{% url 'lista_proyectos' %}">Proyectos</a>
+                        <a class="action-btn btn-negro" href="{% url 'proyectos_populares' %}">Tendencias</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Preferencias -->
+    {% if preferencias %}
+    <div class="preferencias-box">
+        <h2>Tus Preferencias</h2>
+
+        <ul>
+            <li><strong>Estilo favorito:</strong> {{ preferencias.estilo_favorito }}</li>
+            <li><strong>Colores:</strong> {{ preferencias.colores_preferidos }}</li>
+            <li><strong>Presupuesto:</strong> ${{ preferencias.presupuesto }}</li>
+            <li><strong>Ambientes de interés:</strong> {{ preferencias.ambientes_interes }}</li>
+        </ul>
+
+        <div class="preferencias-actions">
+            <a href="{% url 'cuestionario' %}" class="btn-editar-pref">Editar preferencias</a>
+        </div>
+    </div>
+    {% else %}
+        <p>No completaste tu perfil aún.</p>
+        <a href="{% url 'cuestionario' %}" class="btn-completar">Completar cuestionario</a>
+        
+    {% endif %}
+    
+    <h2>Proyectos guardados</h2>
+
+{% for proyecto in proyectos_guardados %}
+    <p>{{ proyecto.titulo }}</p>
+{% empty %}
+    <p>No guardaste proyectos todavía.</p>
+{% endfor %}
+
+
+    <!-- Recomendaciones -->
+    <div class="recomendaciones-section">
+        <h2>Recomendaciones para vos</h2>
+
+        {% if recomendaciones %}
+        <div class="proyectos-grid">
+            {% for proyecto in recomendaciones %}
+            <div class="proyecto-card">
+                <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+                <div class="proyecto-info">
+                    <h3>{{ proyecto.titulo }}</h3>
+                    {% if proyecto.subtitulo %}<h4>{{ proyecto.subtitulo }}</h4>{% endif %}
+                    <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
+
+                    <div class="proyecto-precio">${{ proyecto.precio }}</div>
+
+                    <div class="card-botones">
+                        <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver btn-negro">Ver</a>
+
+                        {% if user.is_authenticated %}
+                        <form action="#" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-fav" aria-pressed="{% if request.user in proyecto.favoritos.all %}true{% else %}false{% endif %}">
+                                <span class="heart">{% if request.user in proyecto.favoritos.all %}♥{% else %}♡{% endif %}</span>
+                                <span class="fav-text">{% if request.user in proyecto.favoritos.all %}Guardado{% else %}Guardar{% endif %}</span>
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No tenemos recomendaciones para tus preferencias todavía.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

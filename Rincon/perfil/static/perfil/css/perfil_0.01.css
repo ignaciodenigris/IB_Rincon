@@ -1,0 +1,306 @@
+
+.nav-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: transform .15s ease;
+}
+
+.nav-avatar:hover {
+    transform: scale(1.05);
+}
+
+/* Si tenés enlaces sueltos arriba */
+a {
+    text-decoration: none;
+    color: #333;
+    margin-right: 12px;
+    font-weight: 500;
+    transition: .2s;
+}
+
+a:hover {
+    color: #111;
+}
+
+
+/* =======================
+   CONTENEDOR PRINCIPAL
+   ======================= */
+
+.perfil-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: "Inter", sans-serif;
+}
+
+
+/* =======================
+   HEADER DEL PERFIL
+   ======================= */
+
+.perfil-header-row {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.perfil-avatar-wrap {
+    flex-shrink: 0;
+}
+
+.perfil-avatar {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+
+.perfil-header h1 {
+    /* Igualar al logo del navbar: tamaño, peso y espaciado */
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin: 0;
+    color: #222;
+}
+
+.perfil-header p {
+    margin-top: 6px;
+    color: #666;
+    font-size: 1rem;
+}
+
+
+/* =======================
+   BOTONES DEL PERFIL
+   ======================= */
+
+.btn-editar-foto,
+.btn-editar-pref,
+.btn-completar {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background-color: #111;
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.25s ease;
+    margin-top: 10px;
+}
+
+.btn-editar-foto:hover,
+.btn-editar-pref:hover,
+.btn-completar:hover {
+    background-color: #333;
+}
+
+
+/* =======================
+   SECCIÓN DE PREFERENCIAS
+   ======================= */
+
+.preferencias-box {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 25px 30px;
+    margin-bottom: 40px;
+    box-shadow: 0px 3px 12px rgba(0,0,0,0.1);
+}
+
+/* Caja para foto de perfil (similar a preferencias-box) */
+.foto-box {
+    /* Match preferencias-box */
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 25px 30px;
+    margin: 20px 0 40px 0;
+    box-shadow: 0px 3px 12px rgba(0,0,0,0.1);
+}
+
+.foto-box h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.25rem;
+    color: #222;
+}
+
+.foto-box-inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.foto-box-preview { flex-shrink: 0; }
+
+.foto-box .perfil-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.foto-box-actions { display: flex; gap: 12px; align-items: center; }
+
+@media (max-width: 700px){
+    .foto-box-inner { flex-direction: column; align-items: flex-start; }
+    .foto-box .perfil-avatar { width: 96px; height: 96px; }
+    .foto-box-actions { width: 100%; justify-content: flex-start; }
+}
+
+.btn-editar-foto { /* ya existente, pero aseguramos coherencia */
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background-color: #111;
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: background 0.25s ease;
+}
+
+.btn-editar-foto:hover { background-color: #333; }
+
+.preferencias-box h2 {
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+    color: #222;
+}
+
+.preferencias-box ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.preferencias-box li {
+    margin-bottom: 6px;
+    font-size: 1rem;
+}
+
+/* Agrupar acciones dentro de Preferencias */
+.preferencias-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.btn-mensajes {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 10px;
+    background: transparent;
+    color: #333;
+    border: 1px solid transparent;
+}
+
+.logout-form {
+    display: inline-block;
+    margin: 0;
+}
+
+.nav-logout {
+    background: transparent;
+    border: 1px solid #e5e5e5;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+}
+
+.nav-logout:hover,
+.nav-logout:focus {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+    .preferencias-actions {
+        justify-content: flex-start;
+    }
+    .perfil-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+
+/* =======================
+   SECCIÓN RECOMENDACIONES
+   ======================= */
+
+.recomendaciones-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+    color: #222;
+}
+
+/* Reutiliza estilos de lista.css (grid y cards) */
+
+/* Aumentamos coherencia visual */
+.proyecto-card {
+    border-radius: 14px !important;
+}
+
+.proyecto-card img {
+    height: 220px;
+    object-fit: cover;
+}
+
+.btn-ver {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #1e88e5;
+    color: #fff;
+}
+
+.btn-fav {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #eee;
+    border: none;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.btn-fav:hover {
+    background: #ddd;
+}
+
+.btn-editar {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #ffcc00;
+    color: #333;
+}
+
+.btn-borrar {
+    padding: 7px 12px;
+    border-radius: 8px;
+    background: #e53935;
+    color: white;
+}
+
+.btn-editar:hover {
+    background: #e0b400;
+}
+
+.btn-borrar:hover {
+    background: #c62828;
+}

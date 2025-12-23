@@ -1,0 +1,27 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'herramientas/css/populares_.css' %}">
+
+<div class="populares-container">
+    <h2>Top 5 proyectos más populares</h2>
+
+    {% if proyectos %}
+    <div class="populares-grid">
+        {% for proyecto in proyectos %}
+        <div class="proyecto-card">
+
+            {% if proyecto.imagen %}
+                <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+            {% endif %}
+
+            <h3>{{ proyecto.titulo }}</h3>
+            <div class="proyecto-categoria">{{ proyecto.categoria }}</div>
+            <div class="proyecto-popularidad">
+                ⭐ Guardado por {{ proyecto.total_favoritos }} clientes
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty-state">Todavía no hay proyectos guardados.</p>
+    {% endif %}
+</div>

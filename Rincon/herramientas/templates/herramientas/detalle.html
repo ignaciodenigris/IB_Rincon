@@ -1,0 +1,50 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'herramientas/css/detalle.css' %}">
+
+<div class="detalle-container">
+
+    <div class="detalle-img">
+        <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+    </div>
+
+    <div class="detalle-info">
+
+        <h1>{{ proyecto.titulo }}</h1>
+
+        {% if proyecto.subtitulo %}
+            <h3 class="subtitulo">{{ proyecto.subtitulo }}</h3>
+        {% endif %}
+
+        <p class="categoria">Categoría: <strong>{{ proyecto.categoria }}</strong></p>
+
+        <p class="descripcion">{{ proyecto.descripcion }}</p>
+
+        <p class="precio">${{ proyecto.precio }}</p>
+
+        <div class="botones">
+
+     {% if user.is_authenticated %}
+<form action="{% url 'toggle_favorito' proyecto.id %}" method="post">
+    {% csrf_token %}
+    <button class="btn-fav">
+        {% if es_favorito %}
+            ♥ Guardado
+        {% else %}
+            ♡ Guardar
+        {% endif %}
+    </button>
+</form>
+{% endif %}
+
+            <!-- CRUD admin -->
+            {% if user.is_staff %}
+                <a class="btn-editar" href="{% url 'editar_proyecto' proyecto.id %}">Editar</a>
+                <a class="btn-borrar" href="{% url 'eliminar_proyecto' proyecto.id %}">Eliminar</a>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'lista_proyectos' %}" class="btn-volver">Volver</a>
+
+    </div>
+</div>

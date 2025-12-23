@@ -1,0 +1,90 @@
+/* ===== Variables base (consistencia visual) ===== */
+:root {
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #222;
+    --muted: #777;
+    --accent: #2f6f62;
+    --border: #e5e5e5;
+}
+
+/* ===== Contenedor general ===== */
+.populares-container {
+    max-width: 1100px;
+    margin: 60px auto;
+    padding: 0 20px;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.populares-container h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--text);
+}
+
+/* ===== Grid ===== */
+.populares-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+/* ===== Card ===== */
+.proyecto-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.proyecto-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,.08);
+}
+
+/* ===== Imagen ===== */
+.proyecto-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* ===== Info ===== */
+.proyecto-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+    color: var(--text);
+}
+
+.proyecto-categoria {
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+.proyecto-popularidad {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(47,111,98,.1);
+    color: var(--accent);
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+/* ===== Estado vacío ===== */
+.empty-state {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 600px) {
+    .populares-container h2 {
+        font-size: 1.6rem;
+    }
+}
