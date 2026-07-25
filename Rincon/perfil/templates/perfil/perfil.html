@@ -44,7 +44,7 @@
                 {% if user.is_staff %}
                     <h3>Herramientas</h3>
                         <div class="tools-buttons">
-                        <a class="action-btn btn-negro" href="{% url 'lista_proyectos' %}">Proyectos</a>
+                        <a class="action-btn btn-negro" href="{% url 'crear_herramienta' %}">Proyectos</a>
                         <a class="action-btn btn-negro" href="{% url 'proyectos_populares' %}">Tendencias</a>
                     </div>
                 {% endif %}
@@ -76,11 +76,36 @@
     
     <h2>Proyectos guardados</h2>
 
-{% for proyecto in proyectos_guardados %}
-    <p>{{ proyecto.titulo }}</p>
-{% empty %}
+    {% if proyectos_guardados %}
+    <div class="proyectos-grid">
+        {% for proyecto in proyectos_guardados %}
+        <div class="proyecto-card">
+            <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+            <div class="proyecto-info">
+                <h3>{{ proyecto.titulo }}</h3>
+                {% if proyecto.subtitulo %}<h4>{{ proyecto.subtitulo }}</h4>{% endif %}
+                <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
+
+                <div class="proyecto-precio">${{ proyecto.precio }}</div>
+
+                <div class="card-botones">
+                    <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver btn-negro">Ver</a>
+
+                    <form action="{% url 'toggle_favorito' proyecto.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-fav" aria-pressed="true">
+                            <span class="heart">♥</span>
+                            <span class="fav-text">Quitar</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
     <p>No guardaste proyectos todavía.</p>
-{% endfor %}
+    {% endif %}
 
 
     <!-- Recomendaciones -->
@@ -103,7 +128,7 @@
                         <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver btn-negro">Ver</a>
 
                         {% if user.is_authenticated %}
-                        <form action="#" method="post" style="display:inline;">
+                        <form action="{% url 'toggle_favorito' proyecto.id %}" method="post" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn-fav" aria-pressed="{% if request.user in proyecto.favoritos.all %}true{% else %}false{% endif %}">
                                 <span class="heart">{% if request.user in proyecto.favoritos.all %}♥{% else %}♡{% endif %}</span>

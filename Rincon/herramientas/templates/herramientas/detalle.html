@@ -22,6 +22,21 @@
 
         <p class="precio">${{ proyecto.precio }}</p>
 
+        <div class="estadisticas">
+
+    <h3>Valoraciones</h3>
+
+    {% if cantidad_resenas > 0 %}
+        <p>
+            {{ promedio_resenas|floatformat:1 }}/5
+            ({{ cantidad_resenas }} reseñas)
+        </p>
+    {% else %}
+        <p>Todavía no hay reseñas.</p>
+    {% endif %}
+
+</div>
+
         <div class="botones">
 
      {% if user.is_authenticated %}
@@ -36,8 +51,6 @@
     </button>
 </form>
 {% endif %}
-
-            <!-- CRUD admin -->
             {% if user.is_staff %}
                 <a class="btn-editar" href="{% url 'editar_proyecto' proyecto.id %}">Editar</a>
                 <a class="btn-borrar" href="{% url 'eliminar_proyecto' proyecto.id %}">Eliminar</a>
@@ -47,4 +60,68 @@
         <a href="{% url 'lista_proyectos' %}" class="btn-volver">Volver</a>
 
     </div>
+    <div class="resenas">
+
+    <h2>Opiniones de los clientes</h2>
+
+    {% for resena in resenas %}
+
+        <div class="resena-card">
+
+            <strong>{{ resena.usuario.username }}</strong>
+
+            <p class="estrellas">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= resena.puntuacion %}
+                        ★
+                    {% else %}
+                        ☆
+                    {% endif %}
+                {% endfor %}
+            </p>
+
+            <p>{{ resena.comentario }}</p>
+
+            <small>
+                {{ resena.fecha|date:"d/m/Y" }}
+            </small>
+
+{% if user.is_authenticated %}
+    <a class="btn-resena"
+       href="{% url 'guardar_resena' proyecto.id %}">
+       Escriba reseña
+    </a>
+    
+{% endif %}
+            {% if user == resena.usuario %}
+                <div class="acciones-resena">
+
+                    <a href="{% url 'guardar_resena' proyecto.id %}">
+                        Editar
+                    </a>
+
+                    <form
+                        action="{% url 'eliminar_resena' resena.id %}"
+                        method="post">
+
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Eliminar
+                        </button>
+
+                    </form>
+
+                </div>
+            {% endif %}
+
+        </div>
+
+    {% empty %}
+
+        <p>Este proyecto todavía no tiene reseñas.</p>
+
+    {% endfor %}
+
+</div>
 </div>

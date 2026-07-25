@@ -1,19 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Actualizar Foto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+
+    <link rel="stylesheet" href="{% static 'perfil/css/actualizar_foto.css' %}">
 </head>
 <body>
+<div class="card">
+    <h2>Actualizar foto</h2>
+    <p class="subtitle">Subí una nueva imagen para tu perfil</p>
 
-<h2>Subir nueva foto de perfil</h2>
-
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar cambios</button>
+    </form>
+</div>
 
 </body>
 </html>

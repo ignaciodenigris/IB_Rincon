@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rincon | home</title>
-    <link rel="stylesheet" href="{% static 'website/css/base_0.01.css' %}">
+    <link rel="stylesheet" href="{% static 'website/css/base.css' %}">
 </head>
 
 <body>
@@ -43,32 +43,65 @@
         </div>
     </main>
 
-    <section id="inicio" class="section hero">
-        <h2>Bienvenido a Rincon</h2>
-        <p>Diseño interior moderno, personalizado y accesible.</p>
-        <a href="{% url 'cuentas:registro' %}" class="btn">Comenzar</a>
-    </section>
+<section class="explorar">
+    <h2>Explorá diferentes proyectos</h2>
+
+    <div class="explorar-grid">
+
+        <div class="explorar-card">
+            <img src="{% static 'website/images/explorar_minimalista.jpg' %}">
+            <div class="explorar-info">
+                <h3>Minimalista</h3>
+                <p>Líneas limpias, calma y funcionalidad.</p>
+                {% if user.is_authenticated %}
+                <a href="/herramientas/lista/?buscar=minimal" class="explorar-btn">
+                {% else %}
+                <a href="{% url 'cuentas:login' %}" class="explorar-btn">
+                {% endif %}
+                Explorar
+                </a>
+            </div>
+        </div>
+
+        <div class="explorar-card">
+            <img src="{% static 'website/images/explorar_moderno.jpg' %}">
+            <div class="explorar-info">
+                <h3>Moderno</h3>
+                <p>Avanzado y elegante.</p>
+                {% if user.is_authenticated %}
+                <a href="/herramientas/lista/?buscar=moderno" class="explorar-btn">
+                {% else %}
+                <a href="{% url 'cuentas:login' %}" class="explorar-btn">
+                {% endif %}
+                Explorar
+                </a>
+            </div>
+        </div>
+
+        <div class="explorar-card">
+            <img src="{% static 'website/images/explorar_industrial.jpg' %}">
+            <div class="explorar-info">
+                <h3>Industrial</h3>
+                <p>Materiales crudos y carácter urbano.</p>
+                {% if user.is_authenticated %}
+                <a href="/herramientas/lista/?buscar=industrial" class="explorar-btn">
+                {% else %}
+                <a href="{% url 'cuentas:login' %}" class="explorar-btn">
+                {% endif %}
+                Explorar
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
 
 
-    <section id="sobre" class="section">
-        <h2>Sobre Nosotros</h2>
-        <p>Somos un equipo dedicado a transformar espacios en experiencias únicas.</p>
-        <a href="{% url 'cuentas:registro' %}" class="btn">Saber más</a>
-    </section>
+<section class="cta-section">
+    <div class="cta-overlay">
+        <a href="#" class="cta-btn">Contactanos</a>
+    </div>
+</section>
+<link rel="stylesheet" href="{% static 'website/css/footer.css' %}">
 
-
-    <section id="galeria" class="section">
-        <h2>Galería</h2>
-        <p>Descubre algunos de nuestros proyectos más destacados.</p>
-        <a href="{% url 'cuentas:registro' %}" class="btn">Ver más</a>
-    </section>
-
-
-    <section id="registro" class="section">
-        <h2>Registrarse</h2>
-        <p>Únete y obtené acceso a recomendaciones personalizadas.</p>
-        <a href="{% url 'cuentas:registro' %}" class="btn">Crear cuenta</a>
-    </section>
-</body>
-
-</html>
+{% include "website/footer.html" %}

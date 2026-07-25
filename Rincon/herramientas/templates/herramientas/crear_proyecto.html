@@ -1,10 +1,19 @@
-<h2>Crear un nueva proyectos</h2>
+{% load static %}
+{% include "website/navbar.html" %}
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
+<link rel="stylesheet" href="{% static 'herramientas/css/crear_proyecto.css' %}">
 
-    <button type="submit" class="btn btn-primary">Guardar</button>
-</form>
+<div class="crear-proyecto-container">
+    <h2>Crear un nuevo proyecto</h2>
 
-<a href="{% url 'lista_proyectos' %}">Volver a la lista</a>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Guardar proyecto</button>
+    </form>
+
+    <a href="{% url 'lista_proyectos' %}" class="volver-link">
+        ← Volver a la lista
+    </a>
+</div>

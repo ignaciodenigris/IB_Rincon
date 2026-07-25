@@ -1,0 +1,40 @@
+{% load static %}
+
+<footer class="site-footer">
+    <div class="footer-container">
+
+        <div class="footer-brand">
+            <h3>Rincón</h3>
+            <p>
+                Diseñamos interiores modernos, funcionales y pensados para vos.
+            </p>
+        </div>
+
+        <div class="footer-links">
+            <h4>Explorar</h4>
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Proyectos</a></li>
+                <li><a href="#">Mi perfil</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-social">
+            <h4>Seguinos</h4>
+            <div class="social-icons">
+                <a href="https://instagram.com/" target="_blank" aria-label="Instagram">
+                    <img src="{% static 'website/img/instagram.svg' %}" alt="Instagram">
+                </a>
+                <a href="https://wa.me/5491112345678" target="_blank" aria-label="WhatsApp">
+                    <img src="{% static 'website/img/whatsapp.svg' %}" alt="WhatsApp">
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © {{ year|default:"2025" }} Rincón · Todos los derechos reservados
+    </div>
+</footer>

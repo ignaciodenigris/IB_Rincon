@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 CATEGORIAS = [
     ('living', 'Living'),
@@ -33,4 +34,40 @@ class Proyecto(models.Model):
 
     def __str__(self):
         return self.titulo
+
+class Resena(models.Model):
+    usuario = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="resenas"
+    )
+
+    proyecto = models.ForeignKey(
+        Proyecto,
+        on_delete=models.CASCADE,
+        related_name="resenas"
+    )
+
+    puntuacion = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(5)
+        ]
+    )
+
+    comentario = models.TextField()
+
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["usuario", "proyecto"],
+                name="una_resena_por_usuario_y_proyecto"
+            )
+        ]
+        ordering = ["-fecha"]
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.proyecto.titulo}"
     

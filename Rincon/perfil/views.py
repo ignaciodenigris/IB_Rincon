@@ -50,6 +50,9 @@ def perfil(request):
                     precio__lte=preferencias.presupuesto
                 )
 
+            # Excluir proyectos que el usuario ya guardó/favoritó
+            recomendaciones = recomendaciones.exclude(favoritos=request.user)
+
     return render(request, "perfil/perfil.html", {
         "preferencias": preferencias,
         "recomendaciones": recomendaciones,

@@ -10,4 +10,6 @@ urlpatterns = [
     path('detalle/<int:id>/', views.detalle_proyecto, name='detalle_proyecto'),
     path('populares/', views.proyectos_populares, name='proyectos_populares'),
     path("favorito/<int:id>/", views.toggle_favorito, name="toggle_favorito"),
+    path("resena/<int:id>/",views.guardar_resena, name="guardar_resena"),
+    path("resena/eliminar/<int:id>/",views.eliminar_resena,name="eliminar_resena"),
 ]

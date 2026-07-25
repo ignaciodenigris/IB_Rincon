@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reseña - {{ proyecto.titulo }}</title>
+
+    <link rel="stylesheet" href="{% static 'herramientas/css/resena.css' %}">
+</head>
+
+<body>
+
+    <div class="resena-container">
+
+        <div class="resena-card">
+
+            <h1>Reseña del proyecto</h1>
+
+            <h2>{{ proyecto.titulo }}</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="campo">
+                    <label for="{{ form.puntuacion.id_for_label }}">
+                        Puntuación
+                    </label>
+
+                    {{ form.puntuacion }}
+
+                    {% if form.puntuacion.errors %}
+                        <div class="error">
+                            {{ form.puntuacion.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="campo">
+                    <label for="{{ form.comentario.id_for_label }}">
+                        Comentario
+                    </label>
+
+                    {{ form.comentario }}
+
+                    {% if form.comentario.errors %}
+                        <div class="error">
+                            {{ form.comentario.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="botones">
+                    <button type="submit" class="btn-guardar">
+                        Guardar reseña
+                    </button>
+
+                    <a
+                        href="{% url 'detalle_proyecto' proyecto.id %}"
+                        class="btn-cancelar"
+                    >
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

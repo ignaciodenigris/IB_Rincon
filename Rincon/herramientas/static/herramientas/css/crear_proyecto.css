@@ -1,0 +1,97 @@
+/* ===== CONTENEDOR GENERAL ===== */
+.crear-proyecto-container {
+    max-width: 700px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    font-family: "Inter", sans-serif;
+}
+
+/* ===== TITULO ===== */
+.crear-proyecto-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 600;
+    color: #222;
+}
+
+/* ===== FORMULARIO ===== */
+.crear-proyecto-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Inputs, selects, textarea */
+.crear-proyecto-container input,
+.crear-proyecto-container select,
+.crear-proyecto-container textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.crear-proyecto-container textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.crear-proyecto-container input:focus,
+.crear-proyecto-container select:focus,
+.crear-proyecto-container textarea:focus {
+    outline: none;
+    border-color: #222;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+/* ===== BOTON GUARDAR ===== */
+.crear-proyecto-container button {
+    margin-top: 10px;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background-color: #111;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.crear-proyecto-container button:hover {
+    background-color: #000;
+    transform: translateY(-2px);
+}
+
+/* ===== LINK VOLVER ===== */
+.volver-link {
+    display: block;
+    margin-top: 25px;
+    text-align: center;
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.volver-link:hover {
+    color: #000;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .crear-proyecto-container {
+        margin: 40px 20px;
+        padding: 30px 20px;
+    }
+
+    .crear-proyecto-container h2 {
+        font-size: 24px;
+    }
+}

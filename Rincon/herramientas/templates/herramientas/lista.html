@@ -1,139 +1,66 @@
+<title>Rincón | Galería</title>
 {% load static %}
-<link rel="stylesheet" href="{% static 'perfil/css/perfil.css' %}">
-
+<link rel="stylesheet" href="{% static 'herramientas/css/lista.css' %}">
 {% include "website/navbar.html" %}
 
-<div class="perfil-container">
+<div class="proyectos-container">
 
-    <!-- HEADER PERFIL -->
-    <div class="perfil-header-row">
-        <div class="perfil-avatar-wrap">
-            {% if user.foto_perfil %}
-                <img src="{{ user.foto_perfil.url }}" class="perfil-avatar">
-            {% elif user.imagen_perfil %}
-                <img src="{{ user.imagen_perfil.url }}" class="perfil-avatar">
-            {% else %}
-                <img src="{% static 'perfil/images/default_profile.png' %}" class="perfil-avatar">
-            {% endif %}
-        </div>
+    <h1>Proyectos Disponibles</h1>
 
-        <div class="perfil-header">
-            <h1>Hola, {{ user.username }}</h1>
-            <p>Este es tu espacio personal dentro de Rincones.</p>
-        </div>
-    </div>
+    <!-- FILTROS -->
+    <form method="GET" class="filtros">
+        <input type="text" name="buscar" placeholder="Buscar proyecto..."
+               value="{{ request.GET.buscar }}">
 
-    <!-- PREFERENCIAS -->
-    <div class="preferencias-box">
-        <h2>Tus preferencias</h2>
+        <select name="categoria">
+            <option value="todas">Todas las categorías</option>
+            <option value="living">Living</option>
+            <option value="cocina">Cocina</option>
+            <option value="banio">Baño</option>
+            <option value="dormitorio">Dormitorio</option>
+            <option value="oficina">Oficina</option>
+            <option value="exterior">Exterior</option>
+        </select>
 
-        {% if preferencias %}
-        <ul>
-            <li><strong>Estilo favorito:</strong> {{ preferencias.estilo_favorito }}</li>
-            <li><strong>Colores:</strong> {{ preferencias.colores_preferidos }}</li>
-            <li><strong>Presupuesto:</strong> ${{ preferencias.presupuesto }}</li>
-            <li><strong>Ambientes de interés:</strong> {{ preferencias.ambientes_interes }}</li>
-        </ul>
+        <input type="number" name="precio_max" placeholder="Precio máximo"
+               value="{{ request.GET.precio_max }}">
 
-        <a href="{% url 'cuestionario' %}" class="btn-editar-pref">
-            Editar preferencias
-        </a>
-        {% else %}
-            <p>No completaste tu perfil todavía.</p>
-            <a href="{% url 'cuestionario' %}" class="btn-completar">
-                Completar cuestionario
-            </a>
-        {% endif %}
-    </div>
+        <button type="submit">Filtrar</button>
+    </form>
 
-    <!-- PROYECTOS GUARDADOS -->
-    <div class="guardados-section">
-        <h2>Proyectos guardados</h2>
+    <!-- GRID -->
+    <div class="proyectos-grid">
+        {% for proyecto in proyectos %}
+        <div class="proyecto-card">
 
-        {% if proyectos_guardados %}
-        <div class="proyectos-grid">
-            {% for proyecto in proyectos_guardados %}
-            <div class="proyecto-card">
-                <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+            <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
 
-                <div class="proyecto-info">
-                    <h3>{{ proyecto.titulo }}</h3>
-                    {% if proyecto.subtitulo %}
-                        <h4>{{ proyecto.subtitulo }}</h4>
+            <div class="proyecto-info">
+                <h2>{{ proyecto.titulo }}</h2>
+                <h3>{{ proyecto.subtitulo }}</h3>
+                <p>{{ proyecto.descripcion }}</p>
+
+                <div class="proyecto-precio">
+                    ${{ proyecto.precio }}
+                </div>
+
+                <div class="card-botones">
+                    <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn btn-ver">
+                        Ver
+                    </a>
+
+                    {% if user.is_staff %}
+                    <a href="{% url 'editar_proyecto' proyecto.id %}" class="btn btn-editar">
+                        Editar
+                    </a>
+                    <a href="{% url 'eliminar_proyecto' proyecto.id %}" class="btn btn-borrar">
+                        Borrar
+                    </a>
                     {% endif %}
-
-                    <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
-
-                    <div class="proyecto-precio">
-                        ${{ proyecto.precio }}
-                    </div>
-
-                    <div class="card-botones">
-                        <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver">
-                            Ver proyecto
-                        </a>
-
-                        <form action="{% url 'toggle_favorito' proyecto.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn-fav">♥ Guardado</button>
-                        </form>
-                    </div>
                 </div>
             </div>
-            {% endfor %}
+
         </div>
-        {% else %}
-            <p class="empty-text">Todavía no guardaste ningún proyecto.</p>
-        {% endif %}
+        {% endfor %}
     </div>
-
-    <!-- RECOMENDACIONES -->
-    <div class="recomendaciones-section">
-        <h2>Recomendaciones para vos</h2>
-
-        {% if recomendaciones %}
-        <div class="proyectos-grid">
-            {% for proyecto in recomendaciones %}
-            <div class="proyecto-card">
-                <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
-
-                <div class="proyecto-info">
-                    <h3>{{ proyecto.titulo }}</h3>
-                    {% if proyecto.subtitulo %}
-                        <h4>{{ proyecto.subtitulo }}</h4>
-                    {% endif %}
-
-                    <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
-
-                    <div class="proyecto-precio">
-                        ${{ proyecto.precio }}
-                    </div>
-
-                    <div class="card-botones">
-                        <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver">
-                            Ver proyecto
-                        </a>
-
-                        <form action="{% url 'toggle_favorito' proyecto.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn-fav">
-                                {% if user in proyecto.favoritos.all %}
-                                    ♥ Guardado
-                                {% else %}
-                                    ♡ Guardar
-                                {% endif %}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-            <p class="empty-text">
-                No tenemos recomendaciones para tus preferencias todavía.
-            </p>
-        {% endif %}
-    </div>
-
 </div>
