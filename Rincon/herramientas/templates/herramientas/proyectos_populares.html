@@ -1,0 +1,232 @@
+{% load static %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'herramientas/css/populares.css' %}"
+>
+
+{% include "website/navbar.html" %}
+
+<main class="dashboard-container">
+
+    <div class="dashboard-header">
+        <div>
+            <span class="dashboard-label">Panel administrativo</span>
+            <h1>Estadísticas de Rincon</h1>
+            <p>
+                Información general sobre proyectos, reseñas y preferencias
+                de los usuarios.
+            </p>
+        </div>
+
+        <a href="{% url 'perfil' %}" class="btn-volver">
+            Volver al perfil
+        </a>
+    </div>
+
+    <!-- Tarjetas generales -->
+    <section class="metricas-grid">
+
+        <article class="metrica-card">
+            <span class="metrica-titulo">Proyectos publicados</span>
+
+            <strong class="metrica-numero">
+                {{ total_proyectos }}
+            </strong>
+
+            <p>Cantidad total de proyectos disponibles.</p>
+        </article>
+
+        <article class="metrica-card">
+            <span class="metrica-titulo">Reseñas recibidas</span>
+
+            <strong class="metrica-numero">
+                {{ total_resenas }}
+            </strong>
+
+            <p>Opiniones realizadas por los clientes.</p>
+        </article>
+
+        <article class="metrica-card">
+            <span class="metrica-titulo">Valoración promedio</span>
+
+            <strong class="metrica-numero">
+                {% if promedio_general %}
+                    {{ promedio_general|floatformat:1 }}/5
+                {% else %}
+                    —
+                {% endif %}
+            </strong>
+
+            <p>Promedio de todas las reseñas.</p>
+        </article>
+
+        <article class="metrica-card">
+            <span class="metrica-titulo">Proyecto más guardado</span>
+
+            <strong class="metrica-proyecto">
+                {% if proyecto_mas_guardado %}
+                    {{ proyecto_mas_guardado.titulo }}
+                {% else %}
+                    —
+                {% endif %}
+            </strong>
+
+            <p>
+                {% if proyecto_mas_guardado %}
+                    {{ proyecto_mas_guardado.cantidad_favoritos }}
+                    guardado{{ proyecto_mas_guardado.cantidad_favoritos|pluralize }}
+                {% else %}
+                    Todavía no hay información.
+                {% endif %}
+            </p>
+        </article>
+
+    </section>
+    <section class="ranking-section">
+
+        <div class="section-header">
+            <div>
+                <span class="section-number">01</span>
+                <h2>Proyectos más guardados</h2>
+            </div>
+
+            <p>
+                Ranking basado en la cantidad de usuarios que agregaron
+                cada proyecto a favoritos.
+            </p>
+        </div>
+
+        <div class="ranking-list">
+
+            {% for proyecto in proyectos_mas_guardados %}
+
+                <article class="ranking-card">
+
+                    <span class="ranking-position">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </span>
+
+                    <img
+                        src="{{ proyecto.imagen.url }}"
+                        alt="{{ proyecto.titulo }}"
+                    >
+
+                    <div class="ranking-info">
+
+                        <h3>{{ proyecto.titulo }}</h3>
+
+                        {% if proyecto.subtitulo %}
+                            <p>{{ proyecto.subtitulo }}</p>
+                        {% endif %}
+
+                        <div class="ranking-data">
+                            <span>
+                                ♥ {{ proyecto.cantidad_favoritos }}
+                                guardado{{ proyecto.cantidad_favoritos|pluralize }}
+                            </span>
+
+                            <span>
+                                {{ proyecto.cantidad_resenas }}
+                                reseña{{ proyecto.cantidad_resenas|pluralize }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="{% url 'detalle_proyecto' proyecto.id %}"
+                        class="btn-ver"
+                    >
+                        Ver
+                    </a>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-state">
+                    Todavía no existen proyectos.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+    <section class="ranking-section">
+
+        <div class="section-header">
+            <div>
+                <span class="section-number">02</span>
+                <h2>Proyectos mejor valorados</h2>
+            </div>
+
+            <p>
+                Ordenados según el promedio de puntuación recibido
+                en las reseñas.
+            </p>
+        </div>
+
+        <div class="ranking-list">
+
+            {% for proyecto in proyectos_mejor_valorados %}
+
+                <article class="ranking-card">
+
+                    <span class="ranking-position">
+                        {{ forloop.counter|stringformat:"02d" }}
+                    </span>
+
+                    <img
+                        src="{{ proyecto.imagen.url }}"
+                        alt="{{ proyecto.titulo }}"
+                    >
+
+                    <div class="ranking-info">
+
+                        <h3>{{ proyecto.titulo }}</h3>
+
+                        {% if proyecto.subtitulo %}
+                            <p>{{ proyecto.subtitulo }}</p>
+                        {% endif %}
+
+                        <div class="ranking-data">
+                            <span class="rating">
+                                {{ proyecto.promedio_resenas|floatformat:1 }}/5
+                            </span>
+
+                            <span>
+                                {{ proyecto.cantidad_resenas }}
+                                reseña{{ proyecto.cantidad_resenas|pluralize }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <a
+                        href="{% url 'detalle_proyecto' proyecto.id %}"
+                        class="btn-ver"
+                    >
+                        Ver
+                    </a>
+
+                </article>
+
+            {% empty %}
+
+                <div class="empty-state">
+                    Todavía no hay proyectos con reseñas.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

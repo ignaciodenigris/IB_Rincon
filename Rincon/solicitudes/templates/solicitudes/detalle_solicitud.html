@@ -1,0 +1,105 @@
+{% load static %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'solicitudes/css/solicitudes.css' %}"
+>
+
+{% include "website/navbar.html" %}
+
+<main class="solicitud-page">
+
+    <div class="detalle-solicitud-card">
+
+        <div class="estado-icono">
+            ✓
+        </div>
+
+        <span class="etiqueta">
+            Solicitud registrada
+        </span>
+
+        <h1>{{ solicitud.proyecto.titulo }}</h1>
+
+        <div class="estado-solicitud estado-{{ solicitud.estado }}">
+            {{ solicitud.get_estado_display }}
+        </div>
+
+        <p class="detalle-introduccion">
+            La solicitud fue enviada al proveedor. Vas a poder
+            confirmarla cuando el proveedor la acepte.
+        </p>
+
+        <div class="datos-solicitud">
+
+            <div class="dato">
+                <span>Cliente</span>
+                <strong>{{ solicitud.cliente.username }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Presupuesto</span>
+                <strong>
+                    ${{ solicitud.presupuesto_cliente|floatformat:0 }}
+                </strong>
+            </div>
+
+            <div class="dato">
+                <span>Fecha de solicitud</span>
+                <strong>
+                    {{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}
+                </strong>
+            </div>
+
+            <div class="dato">
+                <span>Fecha aproximada</span>
+                <strong>
+                    {% if solicitud.fecha_estimada %}
+                        {{ solicitud.fecha_estimada|date:"d/m/Y" }}
+                    {% else %}
+                        Sin especificar
+                    {% endif %}
+                </strong>
+            </div>
+
+        </div>
+
+        {% if solicitud.mensaje %}
+            <div class="mensaje-solicitud">
+                <span>Descripción del servicio</span>
+                <p>{{ solicitud.mensaje }}</p>
+            </div>
+        {% endif %}
+
+        {% if solicitud.respuesta_proveedor %}
+            <div class="respuesta-proveedor">
+                <span>Respuesta del proveedor</span>
+                <p>{{ solicitud.respuesta_proveedor }}</p>
+            </div>
+        {% endif %}
+
+        <div class="acciones-detalle">
+
+            <a
+                href="{% url 'perfil' %}"
+                class="btn-secundario"
+            >
+                Volver al perfil
+            </a>
+
+            <a
+                href="{% url 'detalle_proyecto' solicitud.proyecto.id %}"
+                class="btn-principal"
+            >
+                Ver proyecto
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+{% endblock %}

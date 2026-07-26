@@ -106,44 +106,105 @@
     {% else %}
     <p>No guardaste proyectos todavía.</p>
     {% endif %}
+<div class="recomendaciones-section">
+    <div class="recomendaciones-header">
+        <div>
+            <h2>Recomendaciones para vos</h2>
+            <p>Seleccionadas según tus preferencias, ambientes y presupuesto.</p>
+        </div>
+    </div>
 
-
-    <!-- Recomendaciones -->
-    <div class="recomendaciones-section">
-        <h2>Recomendaciones para vos</h2>
-
-        {% if recomendaciones %}
+    {% if recomendaciones %}
         <div class="proyectos-grid">
-            {% for proyecto in recomendaciones %}
-            <div class="proyecto-card">
-                <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
-                <div class="proyecto-info">
-                    <h3>{{ proyecto.titulo }}</h3>
-                    {% if proyecto.subtitulo %}<h4>{{ proyecto.subtitulo }}</h4>{% endif %}
-                    <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
+            {% for recomendacion in recomendaciones %}
 
-                    <div class="proyecto-precio">${{ proyecto.precio }}</div>
+                <div class="proyecto-card recomendacion-card">
 
-                    <div class="card-botones">
-                        <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver btn-negro">Ver</a>
+                    <div class="recomendacion-imagen">
+                        <img
+                            src="{{ recomendacion.proyecto.imagen.url }}"
+                            alt="{{ recomendacion.proyecto.titulo }}"
+                        >
 
-                        {% if user.is_authenticated %}
-                        <form action="{% url 'toggle_favorito' proyecto.id %}" method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn-fav" aria-pressed="{% if request.user in proyecto.favoritos.all %}true{% else %}false{% endif %}">
-                                <span class="heart">{% if request.user in proyecto.favoritos.all %}♥{% else %}♡{% endif %}</span>
-                                <span class="fav-text">{% if request.user in proyecto.favoritos.all %}Guardado{% else %}Guardar{% endif %}</span>
-                            </button>
-                        </form>
+                        <span class="coincidencia-badge">
+                            {{ recomendacion.puntaje }} puntos
+                        </span>
+                    </div>
+
+                    <div class="proyecto-info">
+
+                        <h3>{{ recomendacion.proyecto.titulo }}</h3>
+
+                        {% if recomendacion.proyecto.subtitulo %}
+                            <h4>{{ recomendacion.proyecto.subtitulo }}</h4>
                         {% endif %}
+
+                        <p>
+                            {{ recomendacion.proyecto.descripcion|truncatewords:15 }}
+                        </p>
+
+                        {% if recomendacion.motivos %}
+                            <div class="motivos-recomendacion">
+                                <span>Coincide con:</span>
+
+                                <ul>
+                                    {% for motivo in recomendacion.motivos %}
+                                        <li>{{ motivo }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+
+                        <div class="proyecto-precio">
+                            ${{ recomendacion.proyecto.precio }}
+                        </div>
+
+                        <div class="card-botones">
+
+                            <a
+                                href="{% url 'detalle_proyecto' recomendacion.proyecto.id %}"
+                                class="btn-ver btn-negro"
+                            >
+                                Ver proyecto
+                            </a>
+
+                            {% if user.is_authenticated %}
+                                <form
+                                    action="{% url 'toggle_favorito' recomendacion.proyecto.id %}"
+                                    method="post"
+                                >
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="btn-fav"
+                                        aria-label="Guardar proyecto"
+                                    >
+                                        <span class="heart">♡</span>
+                                        <span class="fav-text">Guardar</span>
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                        </div>
+
                     </div>
                 </div>
-            </div>
+
             {% endfor %}
         </div>
-        {% else %}
-        <p>No tenemos recomendaciones para tus preferencias todavía.</p>
-        {% endif %}
-    </div>
+
+    {% else %}
+        <div class="sin-recomendaciones">
+            <h3>No encontramos coincidencias todavía</h3>
+            <p>
+                Podés editar tus preferencias para recibir nuevas recomendaciones.
+            </p>
+
+            <a href="{% url 'cuestionario' %}" class="btn-editar-pref">
+                Editar preferencias
+            </a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

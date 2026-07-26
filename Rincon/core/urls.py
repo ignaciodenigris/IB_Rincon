@@ -10,7 +10,8 @@ urlpatterns = [
     path('perfil/', include('perfil.urls')), 
     path('herramientas/', include('herramientas.urls')),
     path('mensajeria/', include('mensajeria.urls')),
-     path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path("solicitudes/",include("solicitudes.urls")),
 ]
 
 if settings.DEBUG:

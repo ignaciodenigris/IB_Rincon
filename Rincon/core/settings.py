@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'perfil',
     'herramientas',
     'mensajeria',
+    'solicitudes',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

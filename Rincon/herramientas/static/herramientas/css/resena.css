@@ -5,135 +5,151 @@
 body {
     margin: 0;
     min-height: 100vh;
-    font-family: Arial, sans-serif;
-    background-color: #f3f0eb;
-    color: #2e2e2e;
+    background:
+        radial-gradient(circle at top left, #ebe5dc, transparent 40%),
+        #f5f3ef;
+    color: #272522;
+    font-family: "Inter", Arial, sans-serif;
 }
 
 .resena-container {
     min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     padding: 40px 20px;
 }
 
 .resena-card {
-    width: 100%;
-    max-width: 620px;
-    padding: 40px;
-    background-color: white;
-    border-radius: 18px;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    width: min(100%, 620px);
+    padding: 38px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 50px rgba(55, 47, 39, 0.12);
 }
 
 .resena-card h1 {
     margin: 0 0 8px;
-    font-size: 32px;
     text-align: center;
+    font-size: 2rem;
+    font-weight: 650;
+    letter-spacing: -0.7px;
 }
 
 .resena-card h2 {
-    margin: 0 0 32px;
-    color: #74706a;
-    font-size: 20px;
+    margin: 0 0 30px;
+    text-align: center;
+    color: #7a736b;
+    font-size: 1rem;
     font-weight: 400;
-    text-align: center;
 }
 
-.campo {
-    margin-bottom: 24px;
-}
-
-.campo label {
-    display: block;
-    margin-bottom: 9px;
-    font-weight: 600;
-}
-
-.form-control {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid #c9c4bd;
-    border-radius: 10px;
-    background-color: #fff;
-    font-family: inherit;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-control:focus {
-    border-color: #6d7c69;
-    box-shadow: 0 0 0 3px rgba(109, 124, 105, 0.18);
-}
-
-textarea.form-control {
-    min-height: 130px;
-    resize: vertical;
-}
-
-.botones {
+.resena-card form {
     display: flex;
-    gap: 12px;
-    margin-top: 30px;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.btn-guardar,
-.btn-cancelar {
-    flex: 1;
-    padding: 13px 18px;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.btn-guardar {
-    background-color: #6d7c69;
-    color: white;
-}
-
-.btn-guardar:hover {
-    background-color: #596755;
-    transform: translateY(-2px);
-}
-
-.btn-cancelar {
-    background-color: #ded9d2;
-    color: #333;
-}
-
-.btn-cancelar:hover {
-    background-color: #cbc4bb;
-    transform: translateY(-2px);
-}
-
-.error {
-    margin-top: 7px;
-    color: #b13a3a;
-    font-size: 14px;
-}
-
-.error ul {
+.resena-card form p {
     margin: 0;
-    padding-left: 18px;
 }
 
-@media (max-width: 600px) {
+.resena-card label {
+    display: block;
+    margin-bottom: 8px;
+    color: #4a4641;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.resena-card select,
+.resena-card textarea {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #dcd6ce;
+    border-radius: 12px;
+    background: #fff;
+    color: #292622;
+    font-family: inherit;
+    font-size: 0.96rem;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.resena-card textarea {
+    min-height: 135px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+.resena-card select:focus,
+.resena-card textarea:focus {
+    outline: none;
+    border-color: #787168;
+    box-shadow: 0 0 0 4px rgba(74, 68, 61, 0.09);
+}
+
+.resena-card button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 5px;
+    padding: 13px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #242321;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.96rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.resena-card button:hover {
+    background: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.17);
+}
+
+.volver-link {
+    display: block;
+    margin-top: 22px;
+    text-align: center;
+    color: #716b64;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.volver-link:hover {
+    color: #111;
+}
+
+.errorlist {
+    margin: 7px 0 0;
+    padding: 10px 13px;
+    border-radius: 9px;
+    background: #f8e4e4;
+    color: #9a3030;
+    font-size: 0.85rem;
+    list-style: none;
+}
+
+@media (max-width: 560px) {
+    .resena-container {
+        padding: 18px 12px;
+    }
+
     .resena-card {
-        padding: 28px 22px;
+        padding: 27px 20px;
+        border-radius: 17px;
     }
 
     .resena-card h1 {
-        font-size: 27px;
-    }
-
-    .botones {
-        flex-direction: column;
+        font-size: 1.65rem;
     }
 }

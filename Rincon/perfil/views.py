@@ -1,61 +1,115 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from herramientas.models import Proyecto
 from .forms import PreferenciasForm
 from .models import Preferencias
-from herramientas.models import Proyecto
 
 
+@login_required
 def cuestionario(request):
-    if request.method == 'POST':
-        form = PreferenciasForm(request.POST)
+    preferencias = Preferencias.objects.filter(
+        usuario=request.user
+    ).first()
+
+    if request.method == "POST":
+        form = PreferenciasForm(
+            request.POST,
+            instance=preferencias
+        )
+
         if form.is_valid():
-            preferencias = form.save(commit=False)
-            preferencias.usuario = request.user
-            preferencias.save()
-            return redirect('perfil')
+            nuevas_preferencias = form.save(commit=False)
+            nuevas_preferencias.usuario = request.user
+            nuevas_preferencias.save()
+
+            return redirect("perfil")
     else:
-        form = PreferenciasForm()
+        form = PreferenciasForm(instance=preferencias)
 
-    return render(request, 'perfil/cuestionario.html', {'form': form})
+    return render(request, "perfil/cuestionario.html", {
+        "form": form
+    })
 
 
+@login_required
 def perfil(request):
-    preferencias = None
-    recomendaciones = None
-    proyectos_guardados = None
+    preferencias = Preferencias.objects.filter(
+        usuario=request.user
+    ).first()
 
-    if request.user.is_authenticated:
-        preferencias = Preferencias.objects.filter(
-            usuario=request.user
-        ).first()
+    proyectos_guardados = Proyecto.objects.filter(
+        favoritos=request.user
+    )
 
-        proyectos_guardados = Proyecto.objects.filter(
+    recomendaciones = []
+
+    if preferencias:
+        proyectos = Proyecto.objects.exclude(
             favoritos=request.user
         )
 
-        if preferencias:
-            recomendaciones = Proyecto.objects.all()
+        colores_usuario = [
+            color.strip().lower()
+            for color in preferencias.colores_preferidos.split(",")
+            if color.strip()
+        ]
 
-            if preferencias.estilo_favorito:
-                recomendaciones = recomendaciones.filter(
-                    subtitulo__icontains=preferencias.estilo_favorito
-                )
+        ambientes_usuario = [
+            ambiente.strip().lower()
+            for ambiente in preferencias.ambientes_interes.split(",")
+            if ambiente.strip()
+        ]
 
-            if preferencias.ambientes_interes:
-                recomendaciones = recomendaciones.filter(
-                    categoria__iexact=preferencias.ambientes_interes
-                )
+        for proyecto in proyectos:
+            puntaje = 0
+            motivos = []
 
-            if preferencias.presupuesto:
-                recomendaciones = recomendaciones.filter(
-                    precio__lte=preferencias.presupuesto
-                )
+            subtitulo = (proyecto.subtitulo or "").lower()
+            descripcion = (proyecto.descripcion or "").lower()
+            categoria = (proyecto.categoria or "").lower()
 
-            # Excluir proyectos que el usuario ya guardó/favoritó
-            recomendaciones = recomendaciones.exclude(favoritos=request.user)
+            texto_proyecto = f"{subtitulo} {descripcion} {categoria}"
+
+            if (
+                preferencias.estilo_favorito
+                and preferencias.estilo_favorito.lower() in texto_proyecto
+            ):
+                puntaje += 3
+                motivos.append("Estilo favorito")
+
+            if categoria in ambientes_usuario:
+                puntaje += 4
+                motivos.append("Ambiente de interés")
+
+            if any(
+                color in texto_proyecto
+                for color in colores_usuario
+            ):
+                puntaje += 2
+                motivos.append("Colores preferidos")
+
+            if (
+                preferencias.presupuesto
+                and proyecto.precio <= preferencias.presupuesto
+            ):
+                puntaje += 3
+                motivos.append("Dentro de tu presupuesto")
+
+            if puntaje > 0:
+                recomendaciones.append({
+                    "proyecto": proyecto,
+                    "puntaje": puntaje,
+                    "motivos": motivos,
+                })
+
+        recomendaciones.sort(
+            key=lambda recomendacion: recomendacion["puntaje"],
+            reverse=True
+        )
 
     return render(request, "perfil/perfil.html", {
         "preferencias": preferencias,
         "recomendaciones": recomendaciones,
         "proyectos_guardados": proyectos_guardados,
     })
-

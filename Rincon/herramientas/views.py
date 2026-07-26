@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Proyecto, Resena
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.admin.views.decorators import staff_member_required
 from .forms import ProyectoForm, ResenaForm
 from django.db.models import Count, Avg
 
@@ -99,19 +100,57 @@ def eliminar_proyecto(request, id):
 from django.db.models import Count
 
 @login_required
-@user_passes_test(es_admin)
+@staff_member_required
 def proyectos_populares(request):
-    if not request.user.is_staff:
-        return redirect('home')
-
     proyectos = Proyecto.objects.annotate(
-        total_favoritos=Count('favoritos')
-    ).order_by('-total_favoritos')[:5]
+        cantidad_favoritos=Count(
+            "favoritos",
+            distinct=True
+        ),
+        promedio_resenas=Avg(
+            "resenas__puntuacion"
+        ),
+        cantidad_resenas=Count(
+            "resenas",
+            distinct=True
+        )
+    )
 
-    return render(request, 'herramientas/populares.html', {
-        'proyectos': proyectos
-    })
+    proyectos_mas_guardados = proyectos.order_by(
+        "-cantidad_favoritos",
+        "titulo"
+    )[:5]
 
+    proyectos_mejor_valorados = proyectos.filter(
+        cantidad_resenas__gt=0
+    ).order_by(
+        "-promedio_resenas",
+        "-cantidad_resenas"
+    )[:5]
+
+    total_proyectos = Proyecto.objects.count()
+    total_resenas = Resena.objects.count()
+
+    promedio_general = Resena.objects.aggregate(
+        promedio=Avg("puntuacion")
+    )["promedio"]
+
+    proyecto_mas_guardado = proyectos.order_by(
+        "-cantidad_favoritos"
+    ).first()
+
+    return render(
+        request,
+        "herramientas/proyectos_populares.html",
+        {
+            "total_proyectos": total_proyectos,
+            "total_resenas": total_resenas,
+            "promedio_general": promedio_general,
+            "proyecto_mas_guardado": proyecto_mas_guardado,
+            "proyectos_mas_guardados": proyectos_mas_guardados,
+            "proyectos_mejor_valorados": proyectos_mejor_valorados,
+        }
+    )
 @login_required
 def toggle_favorito(request, id):
     proyecto = get_object_or_404(Proyecto, id=id)

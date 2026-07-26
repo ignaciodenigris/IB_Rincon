@@ -1,0 +1,170 @@
+{% load static %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'solicitudes/css/solicitudes.css' %}"
+>
+
+{% include "website/navbar.html" %}
+
+<main class="solicitud-page">
+
+    <div class="solicitud-container">
+
+        <section class="proyecto-resumen">
+
+            <div class="proyecto-imagen">
+                <img
+                    src="{{ proyecto.imagen.url }}"
+                    alt="{{ proyecto.titulo }}"
+                >
+            </div>
+
+            <div class="proyecto-datos">
+
+                <span class="etiqueta">
+                    Proyecto seleccionado
+                </span>
+
+                <h1>{{ proyecto.titulo }}</h1>
+
+                {% if proyecto.subtitulo %}
+                    <h2>{{ proyecto.subtitulo }}</h2>
+                {% endif %}
+
+                <p>
+                    {{ proyecto.descripcion|truncatewords:35 }}
+                </p>
+
+                <div class="precio-proyecto">
+                    Precio de referencia:
+                    <strong>${{ proyecto.precio }}</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="formulario-card">
+
+            <div class="formulario-header">
+                <span class="etiqueta">Solicitud de servicio</span>
+
+                <h2>Contanos qué necesitás</h2>
+
+                <p>
+                    El proveedor revisará la información y podrá
+                    aceptar o rechazar la solicitud.
+                </p>
+            </div>
+
+            {% if preferencias %}
+                <div class="preferencias-resumen">
+                    <strong>Información de tu perfil</strong>
+
+                    <span>
+                        Estilo:
+                        {{ preferencias.get_estilo_favorito_display }}
+                    </span>
+
+                    <span>
+                        Ambientes:
+                        {{ preferencias.ambientes_interes }}
+                    </span>
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate>
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="form-errors">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="campo-formulario">
+                    <label for="{{ form.presupuesto_cliente.id_for_label }}">
+                        {{ form.presupuesto_cliente.label }}
+                    </label>
+
+                    {{ form.presupuesto_cliente }}
+
+                    {% for error in form.presupuesto_cliente.errors %}
+                        <small class="campo-error">
+                            {{ error }}
+                        </small>
+                    {% endfor %}
+
+                    <small class="campo-ayuda">
+                        Indicá cuánto podrías invertir en el servicio.
+                    </small>
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="{{ form.mensaje.id_for_label }}">
+                        {{ form.mensaje.label }}
+                    </label>
+
+                    {{ form.mensaje }}
+
+                    {% for error in form.mensaje.errors %}
+                        <small class="campo-error">
+                            {{ error }}
+                        </small>
+                    {% endfor %}
+                </div>
+
+                <div class="campo-formulario">
+                    <label for="{{ form.fecha_estimada.id_for_label }}">
+                        {{ form.fecha_estimada.label }}
+                    </label>
+
+                    {{ form.fecha_estimada }}
+
+                    {% for error in form.fecha_estimada.errors %}
+                        <small class="campo-error">
+                            {{ error }}
+                        </small>
+                    {% endfor %}
+
+                    <small class="campo-ayuda">
+                        Es opcional. Podés indicar cuándo te gustaría comenzar.
+                    </small>
+                </div>
+
+                <div class="aviso-confirmacion">
+                    Al enviar la solicitud, el servicio todavía no queda
+                    confirmado. Primero deberá ser revisado por el proveedor.
+                </div>
+
+                <div class="acciones-formulario">
+
+                    <a
+                        href="{% url 'detalle_proyecto' proyecto.id %}"
+                        class="btn-secundario"
+                    >
+                        Cancelar
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn-principal"
+                    >
+                        Enviar solicitud
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</main>
+
+{% endblock %}
