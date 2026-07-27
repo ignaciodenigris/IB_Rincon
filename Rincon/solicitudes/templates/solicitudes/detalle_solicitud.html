@@ -1,103 +1,211 @@
-{% if not user.is_staff and solicitud.cliente == user %}
+{% load static %}
 
-    {% if solicitud.estado == "aceptada_proveedor" %}
+{% block content %}
 
-        <section class="confirmacion-cliente">
-            <h2>Confirmar servicio</h2>
+<link
+    rel="stylesheet"
+    href="{% static 'solicitudes/css/solicitudes.css' %}"
+>
+<link
+    rel="stylesheet"
+    href="{% static 'solicitudes/css/solicitudes_mejoras.css' %}"
+>
 
-            <p>
-                El proveedor aceptó tu solicitud. Revisá su respuesta
-                y confirmá si querés comenzar el servicio.
-            </p>
+{% include "website/navbar.html" %}
 
-            <div class="botones-confirmacion">
-                <form
-                    method="post"
-                    action="{% url 'confirmar_solicitud' solicitud.id %}"
-                >
-                    {% csrf_token %}
-                    <button type="submit" class="btn-confirmar">
-                        Confirmar servicio
-                    </button>
-                </form>
+<main class="solicitud-page">
 
-                <form
-                    method="post"
-                    action="{% url 'cancelar_solicitud' solicitud.id %}"
-                >
-                    {% csrf_token %}
-                    <button type="submit" class="btn-cancelar">
-                        Cancelar solicitud
-                    </button>
-                </form>
+    <section class="detalle-solicitud-card">
+
+        <div class="detalle-encabezado">
+            <div class="estado-icono estado-{{ solicitud.estado }}">
+                {% if solicitud.estado == "rechazada" or solicitud.estado == "cancelada" %}
+                    ×
+                {% else %}
+                    ✓
+                {% endif %}
             </div>
-        </section>
 
-    {% elif solicitud.estado == "pendiente" %}
+            <span class="etiqueta">Solicitud de servicio</span>
+            <h1>{{ solicitud.proyecto.titulo }}</h1>
 
-        <section class="confirmacion-cliente">
-            <p>La solicitud todavía está pendiente de revisión.</p>
+            <span class="estado-solicitud estado-{{ solicitud.estado }}">
+                {{ solicitud.get_estado_display }}
+            </span>
 
-            <form
-                method="post"
-                action="{% url 'cancelar_solicitud' solicitud.id %}"
-            >
-                {% csrf_token %}
-                <button type="submit" class="btn-cancelar">
-                    Cancelar solicitud
-                </button>
-            </form>
-        </section>
-
-    {% endif %}
-
-{% endif %}
-
-{% if user.is_staff and solicitud.estado == "pendiente" %}
-
-    <section class="acciones-proveedor">
-        <h2>Responder solicitud</h2>
-
-        <div class="campo-formulario">
-            <label for="respuesta_proveedor">
-                Respuesta al cliente
-            </label>
-
-            <textarea
-                id="respuesta_proveedor"
-                class="form-control"
-                rows="4"
-                placeholder="Escribí una respuesta para el cliente"
-            >{{ solicitud.respuesta_proveedor }}</textarea>
+            <p class="detalle-introduccion">
+                Revisá los datos, el mensaje del cliente y el estado actual de la solicitud.
+            </p>
         </div>
 
-        <div class="botones-respuesta">
-            <form
-                method="post"
-                action="{% url 'aceptar_solicitud' solicitud.id %}"
-                onsubmit="this.respuesta_proveedor.value = document.getElementById('respuesta_proveedor').value;"
-            >
-                {% csrf_token %}
-                <input type="hidden" name="respuesta_proveedor" value="">
+        <div class="datos-solicitud">
+            <div class="dato">
+                <span>Cliente</span>
+                <strong>{{ solicitud.cliente.username }}</strong>
+            </div>
 
-                <button type="submit" class="btn-aceptar">
-                    Aceptar solicitud
-                </button>
-            </form>
+            <div class="dato">
+                <span>Presupuesto</span>
+                <strong>${{ solicitud.presupuesto_cliente|floatformat:0 }}</strong>
+            </div>
 
-            <form
-                method="post"
-                action="{% url 'rechazar_solicitud' solicitud.id %}"
-                onsubmit="this.respuesta_proveedor.value = document.getElementById('respuesta_proveedor').value;"
-            >
-                {% csrf_token %}
-                <input type="hidden" name="respuesta_proveedor" value="">
+            <div class="dato">
+                <span>Fecha solicitada</span>
+                <strong>
+                    {% if solicitud.fecha_estimada %}
+                        {{ solicitud.fecha_estimada|date:"d/m/Y" }}
+                    {% else %}
+                        Sin especificar
+                    {% endif %}
+                </strong>
+            </div>
 
-                <button type="submit" class="btn-rechazar">
-                    Rechazar solicitud
-                </button>
-            </form>
+            <div class="dato">
+                <span>Fecha de envío</span>
+                <strong>{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</strong>
+            </div>
         </div>
+
+        <div class="mensaje-solicitud">
+            <span>Mensaje del cliente</span>
+            <p>
+                {% if solicitud.mensaje %}
+                    {{ solicitud.mensaje }}
+                {% else %}
+                    El cliente no agregó un mensaje.
+                {% endif %}
+            </p>
+        </div>
+
+        {% if solicitud.respuesta_proveedor %}
+            <div class="respuesta-proveedor">
+                <span>Respuesta del proveedor</span>
+                <p>{{ solicitud.respuesta_proveedor }}</p>
+            </div>
+        {% endif %}
+
+        {% if user.is_staff and solicitud.estado == "pendiente" %}
+
+            <section class="acciones-proveedor">
+                <h2>Responder solicitud</h2>
+                <p class="texto-ayuda">
+                    Escribí una respuesta para el cliente antes de aceptar o rechazar la solicitud.
+                </p>
+
+                <div class="campo-formulario">
+                    <label for="respuesta_proveedor">
+                        Respuesta al cliente
+                    </label>
+
+                    <textarea
+                        id="respuesta_proveedor"
+                        class="form-control"
+                        rows="4"
+                        placeholder="Escribí una respuesta para el cliente"
+                    >{{ solicitud.respuesta_proveedor }}</textarea>
+                </div>
+
+                <div class="botones-respuesta">
+                    <form
+                        method="post"
+                        action="{% url 'aceptar_solicitud' solicitud.id %}"
+                        onsubmit="this.respuesta_proveedor.value = document.getElementById('respuesta_proveedor').value;"
+                    >
+                        {% csrf_token %}
+                        <input type="hidden" name="respuesta_proveedor" value="">
+
+                        <button type="submit" class="btn-aceptar">
+                            Aceptar solicitud
+                        </button>
+                    </form>
+
+                    <form
+                        method="post"
+                        action="{% url 'rechazar_solicitud' solicitud.id %}"
+                        onsubmit="this.respuesta_proveedor.value = document.getElementById('respuesta_proveedor').value;"
+                    >
+                        {% csrf_token %}
+                        <input type="hidden" name="respuesta_proveedor" value="">
+
+                        <button type="submit" class="btn-rechazar">
+                            Rechazar solicitud
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+        {% elif not user.is_staff and solicitud.cliente == user %}
+
+            {% if solicitud.estado == "aceptada_proveedor" %}
+
+                <section class="confirmacion-cliente">
+                    <h2>Confirmar servicio</h2>
+                    <p>
+                        El proveedor aceptó tu solicitud. Revisá su respuesta y confirmá si querés comenzar el servicio.
+                    </p>
+
+                    <div class="botones-confirmacion">
+                        <form method="post" action="{% url 'confirmar_solicitud' solicitud.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-confirmar">
+                                Confirmar servicio
+                            </button>
+                        </form>
+
+                        <form method="post" action="{% url 'cancelar_solicitud' solicitud.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-cancelar">
+                                Cancelar solicitud
+                            </button>
+                        </form>
+                    </div>
+                </section>
+
+            {% elif solicitud.estado == "pendiente" %}
+
+                <section class="confirmacion-cliente">
+                    <p>La solicitud todavía está pendiente de revisión.</p>
+
+                    <form method="post" action="{% url 'cancelar_solicitud' solicitud.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-cancelar">
+                            Cancelar solicitud
+                        </button>
+                    </form>
+                </section>
+
+            {% endif %}
+
+        {% endif %}
+
+        {% if solicitud.estado == "rechazada" %}
+            <div class="estado-aviso estado-aviso-rechazada">
+                Esta solicitud fue rechazada. Los datos y la respuesta quedan guardados para poder consultarlos sin que la página se rompa.
+            </div>
+        {% elif solicitud.estado == "cancelada" %}
+            <div class="estado-aviso estado-aviso-cancelada">
+                Esta solicitud fue cancelada y ya no admite nuevas acciones.
+            </div>
+        {% elif solicitud.estado == "confirmada" or solicitud.estado == "en_proceso" or solicitud.estado == "finalizada" %}
+            <div class="estado-aviso estado-aviso-{{ solicitud.estado }}">
+                Estado actual: {{ solicitud.get_estado_display }}.
+            </div>
+        {% endif %}
+
+        <div class="volver-panel">
+            {% if user.is_staff %}
+                <a href="{% url 'solicitudes_proveedor' %}" class="btn-secundario">
+                    Volver al panel
+                </a>
+            {% else %}
+                <a href="{% url 'perfil' %}" class="btn-secundario">
+                    Volver a mi perfil
+                </a>
+            {% endif %}
+        </div>
+
     </section>
 
-{% endif %}
+</main>
+
+{% endblock %}
