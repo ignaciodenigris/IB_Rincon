@@ -207,4 +207,91 @@
         </div>
     {% endif %}
 </div>
+<section class="solicitudes-section">
+
+    <div class="section-header">
+        <div>
+            <span class="section-number">03</span>
+            <h2>Mis solicitudes</h2>
+        </div>
+
+        <p>
+            Consultá el estado de los servicios que solicitaste.
+        </p>
+    </div>
+
+    <div class="solicitudes-grid">
+
+        {% for solicitud in solicitudes_cliente %}
+
+            <article class="solicitud-card">
+
+                {% if solicitud.proyecto.imagen %}
+                    <img
+                        src="{{ solicitud.proyecto.imagen.url }}"
+                        alt="{{ solicitud.proyecto.titulo }}"
+                    >
+                {% endif %}
+
+                <div class="solicitud-contenido">
+
+                    <div class="solicitud-superior">
+
+                        <span class="estado estado-{{ solicitud.estado }}">
+                            {{ solicitud.get_estado_display }}
+                        </span>
+
+                        <span class="fecha-solicitud">
+                            {{ solicitud.fecha_solicitud|date:"d/m/Y" }}
+                        </span>
+
+                    </div>
+
+                    <h3>{{ solicitud.proyecto.titulo }}</h3>
+
+                    <p>
+                        Presupuesto:
+                        <strong>
+                            ${{ solicitud.presupuesto_cliente|floatformat:0 }}
+                        </strong>
+                    </p>
+
+                    {% if solicitud.fecha_estimada %}
+                        <p>
+                            Fecha aproximada:
+                            {{ solicitud.fecha_estimada|date:"d/m/Y" }}
+                        </p>
+                    {% endif %}
+
+                    <a
+                        href="{% url 'detalle_solicitud' solicitud.id %}"
+                        class="btn-ver-solicitud"
+                    >
+                        Ver solicitud
+                    </a>
+
+                </div>
+
+            </article>
+
+        {% empty %}
+
+            <div class="sin-solicitudes">
+                <h3>Todavía no realizaste solicitudes</h3>
+
+                <p>
+                    Cuando solicites un servicio, vas a poder seguir
+                    su estado desde acá.
+                </p>
+
+                <a href="{% url 'lista_proyectos' %}">
+                    Explorar proyectos
+                </a>
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
 {% endblock %}

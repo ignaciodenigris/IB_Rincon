@@ -1,0 +1,111 @@
+{% load static %}
+
+{% block content %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'solicitudes/css/solicitudes.css' %}"
+>
+
+{% include "website/navbar.html" %}
+
+<main class="solicitud-page">
+
+    <div class="panel-proveedor">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="etiqueta">Panel del proveedor</span>
+                <h1>Solicitudes recibidas</h1>
+            </div>
+
+            <form method="get" class="filtro-estados">
+
+                <select name="estado">
+                    <option value="">Todos los estados</option>
+
+                    {% for valor, nombre in estados %}
+                        <option
+                            value="{{ valor }}"
+                            {% if estado_seleccionado == valor %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">
+                    Filtrar
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="tabla-solicitudes">
+
+            <div class="tabla-header">
+                <span>Cliente</span>
+                <span>Proyecto</span>
+                <span>Presupuesto</span>
+                <span>Estado</span>
+                <span>Fecha</span>
+                <span></span>
+            </div>
+
+            {% for solicitud in solicitudes %}
+
+                <div class="tabla-fila">
+
+                    <span>
+                        {{ solicitud.cliente.username }}
+                    </span>
+
+                    <span>
+                        {{ solicitud.proyecto.titulo }}
+                    </span>
+
+                    <span>
+                        ${{ solicitud.presupuesto_cliente|floatformat:0 }}
+                    </span>
+
+                    <span>
+                        <span class="estado estado-{{ solicitud.estado }}">
+                            {{ solicitud.get_estado_display }}
+                        </span>
+                    </span>
+
+                    <span>
+                        {{ solicitud.fecha_solicitud|date:"d/m/Y" }}
+                    </span>
+
+                    <span>
+                        <a
+                            href="{% url 'detalle_solicitud' solicitud.id %}"
+                            class="btn-ver-solicitud"
+                        >
+                            Ver
+                        </a>
+                    </span>
+
+                </div>
+
+            {% empty %}
+
+                <div class="sin-solicitudes">
+                    <h3>No hay solicitudes</h3>
+                    <p>No se encontraron solicitudes con ese estado.</p>
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</main>
+
+{% endblock %}

@@ -1,105 +1,116 @@
-{% load static %}
+{%if user.is_staff and solicitud.estado == "pendiente" %}
+{% if not user.is_staff and solicitud.cliente == user %}
 
-{% block content %}
+    {% if solicitud.estado == "aceptada_proveedor" %}
 
-<link
-    rel="stylesheet"
-    href="{% static 'solicitudes/css/solicitudes.css' %}"
->
+        <section class="confirmacion-cliente">
 
-{% include "website/navbar.html" %}
+            <h2>Confirmar servicio</h2>
 
-<main class="solicitud-page">
+            <p>
+                El proveedor aceptó tu solicitud. Revisá su respuesta
+                y confirmá si querés comenzar el servicio.
+            </p>
 
-    <div class="detalle-solicitud-card">
+            <div class="botones-confirmacion">
 
-        <div class="estado-icono">
-            ✓
-        </div>
+                <form
+                    method="post"
+                    action="{% url 'confirmar_solicitud' solicitud.id %}"
+                >
+                    {% csrf_token %}
 
-        <span class="etiqueta">
-            Solicitud registrada
-        </span>
+                    <button
+                        type="submit"
+                        class="btn-confirmar"
+                    >
+                        Confirmar servicio
+                    </button>
+                </form>
 
-        <h1>{{ solicitud.proyecto.titulo }}</h1>
+                <form
+                    method="post"
+                    action="{% url 'cancelar_solicitud' solicitud.id %}"
+                >
+                    {% csrf_token %}
 
-        <div class="estado-solicitud estado-{{ solicitud.estado }}">
-            {{ solicitud.get_estado_display }}
-        </div>
+                    <button
+                        type="submit"
+                        class="btn-cancelar"
+                    >
+                        Cancelar solicitud
+                    </button>
+                </form>
 
-        <p class="detalle-introduccion">
-            La solicitud fue enviada al proveedor. Vas a poder
-            confirmarla cuando el proveedor la acepte.
-        </p>
-
-        <div class="datos-solicitud">
-
-            <div class="dato">
-                <span>Cliente</span>
-                <strong>{{ solicitud.cliente.username }}</strong>
             </div>
 
-            <div class="dato">
-                <span>Presupuesto</span>
-                <strong>
-                    ${{ solicitud.presupuesto_cliente|floatformat:0 }}
-                </strong>
-            </div>
+        </section>
 
-            <div class="dato">
-                <span>Fecha de solicitud</span>
-                <strong>
-                    {{ solicitud.fecha_solicitud|date:"d/m/Y H:i" }}
-                </strong>
-            </div>
+    {% elif solicitud.estado == "pendiente" %}
 
-            <div class="dato">
-                <span>Fecha aproximada</span>
-                <strong>
-                    {% if solicitud.fecha_estimada %}
-                        {{ solicitud.fecha_estimada|date:"d/m/Y" }}
-                    {% else %}
-                        Sin especificar
-                    {% endif %}
-                </strong>
-            </div>
+        <section class="confirmacion-cliente">
 
-        </div>
+            <p>
+                La solicitud todavía está pendiente de revisión.
+            </p>
 
-        {% if solicitud.mensaje %}
-            <div class="mensaje-solicitud">
-                <span>Descripción del servicio</span>
-                <p>{{ solicitud.mensaje }}</p>
-            </div>
-        {% endif %}
-
-        {% if solicitud.respuesta_proveedor %}
-            <div class="respuesta-proveedor">
-                <span>Respuesta del proveedor</span>
-                <p>{{ solicitud.respuesta_proveedor }}</p>
-            </div>
-        {% endif %}
-
-        <div class="acciones-detalle">
-
-            <a
-                href="{% url 'perfil' %}"
-                class="btn-secundario"
+            <form
+                method="post"
+                action="{% url 'cancelar_solicitud' solicitud.id %}"
             >
-                Volver al perfil
-            </a>
+                {% csrf_token %}
 
-            <a
-                href="{% url 'detalle_proyecto' solicitud.proyecto.id %}"
-                class="btn-principal"
-            >
-                Ver proyecto
-            </a>
+                <button
+                    type="submit"
+                    class="btn-cancelar"
+                >
+                    Cancelar solicitud
+                </button>
+            </form>
 
-        </div>
+        </section>
 
-    </div>
+    {% endif %}
 
-</main>
+{% endif %}
+    <section class="acciones-proveedor">
 
-{% endblock %}
+        <h2>Responder solicitud</h2>
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="campo-formulario">
+                <label for="{{ respuesta_form.respuesta_proveedor.id_for_label }}">
+                    {{ respuesta_form.respuesta_proveedor.label }}
+                </label>
+
+                {{ respuesta_form.respuesta_proveedor }}
+            </div>
+
+            <div class="botones-respuesta">
+
+                <button
+                    type="submit"
+                    formaction="{% url 'aceptar_solicitud' solicitud.id %}"
+                    class="btn-aceptar"
+                >
+                    Aceptar solicitud
+                </button>
+
+                <button
+                    type="submit"
+                    formaction="{% url 'rechazar_solicitud' solicitud.id %}"
+                    class="btn-rechazar"
+                >
+                    Rechazar solicitud
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+{% endif %}

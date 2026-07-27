@@ -54,3 +54,27 @@ class SolicitudServicioForm(forms.ModelForm):
             )
 
         return presupuesto
+
+class RespuestaProveedorForm(forms.ModelForm):
+    class Meta:
+        model = SolicitudServicio
+        fields = [
+            "respuesta_proveedor",
+        ]
+
+        labels = {
+            "respuesta_proveedor": "Respuesta al cliente",
+        }
+
+        widgets = {
+            "respuesta_proveedor": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 4,
+                    "placeholder": (
+                        "Explicá condiciones, disponibilidad o "
+                        "cualquier información relevante."
+                    ),
+                }
+            ),
+        }

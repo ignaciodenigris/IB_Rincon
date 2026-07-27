@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect
 from herramientas.models import Proyecto
 from .forms import PreferenciasForm
 from .models import Preferencias
+from solicitudes.models import SolicitudServicio
+
+
 
 
 @login_required
@@ -41,6 +44,10 @@ def perfil(request):
     proyectos_guardados = Proyecto.objects.filter(
         favoritos=request.user
     )
+
+    solicitudes_cliente = SolicitudServicio.objects.filter(
+    cliente=request.user
+    ).select_related("proyecto")
 
     recomendaciones = []
 
@@ -112,4 +119,6 @@ def perfil(request):
         "preferencias": preferencias,
         "recomendaciones": recomendaciones,
         "proyectos_guardados": proyectos_guardados,
+        "solicitudes_cliente": solicitudes_cliente,
     })
+
