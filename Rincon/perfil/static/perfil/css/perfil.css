@@ -563,3 +563,21 @@ h2 {
         height: 180px;
     }
 }
+.btn-panel-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: 10px;
+    background: #252422;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-panel-control:hover {
+    background: #000;
+    transform: translateY(-1px);
+}

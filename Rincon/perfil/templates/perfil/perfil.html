@@ -46,6 +46,14 @@
                         <div class="tools-buttons">
                         <a class="action-btn btn-negro" href="{% url 'crear_herramienta' %}">Proyectos</a>
                         <a class="action-btn btn-negro" href="{% url 'proyectos_populares' %}">Tendencias</a>
+                        {% if user.is_staff %}
+    <a
+        href="{% url 'solicitudes_proveedor' %}"
+        class="btn-panel-control"
+    >
+        Panel de control
+    </a>
+{% endif %}
                     </div>
                 {% endif %}
             </div>
