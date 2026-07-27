@@ -1,10 +1,8 @@
-{%if user.is_staff and solicitud.estado == "pendiente" %}
 {% if not user.is_staff and solicitud.cliente == user %}
 
     {% if solicitud.estado == "aceptada_proveedor" %}
 
         <section class="confirmacion-cliente">
-
             <h2>Confirmar servicio</h2>
 
             <p>
@@ -13,17 +11,12 @@
             </p>
 
             <div class="botones-confirmacion">
-
                 <form
                     method="post"
                     action="{% url 'confirmar_solicitud' solicitud.id %}"
                 >
                     {% csrf_token %}
-
-                    <button
-                        type="submit"
-                        class="btn-confirmar"
-                    >
+                    <button type="submit" class="btn-confirmar">
                         Confirmar servicio
                     </button>
                 </form>
@@ -33,84 +26,78 @@
                     action="{% url 'cancelar_solicitud' solicitud.id %}"
                 >
                     {% csrf_token %}
-
-                    <button
-                        type="submit"
-                        class="btn-cancelar"
-                    >
+                    <button type="submit" class="btn-cancelar">
                         Cancelar solicitud
                     </button>
                 </form>
-
             </div>
-
         </section>
 
     {% elif solicitud.estado == "pendiente" %}
 
         <section class="confirmacion-cliente">
-
-            <p>
-                La solicitud todavía está pendiente de revisión.
-            </p>
+            <p>La solicitud todavía está pendiente de revisión.</p>
 
             <form
                 method="post"
                 action="{% url 'cancelar_solicitud' solicitud.id %}"
             >
                 {% csrf_token %}
-
-                <button
-                    type="submit"
-                    class="btn-cancelar"
-                >
+                <button type="submit" class="btn-cancelar">
                     Cancelar solicitud
                 </button>
             </form>
-
         </section>
 
     {% endif %}
 
 {% endif %}
-    <section class="acciones-proveedor">
 
+{% if user.is_staff and solicitud.estado == "pendiente" %}
+
+    <section class="acciones-proveedor">
         <h2>Responder solicitud</h2>
 
-        <form method="post">
+        <div class="campo-formulario">
+            <label for="respuesta_proveedor">
+                Respuesta al cliente
+            </label>
 
-            {% csrf_token %}
+            <textarea
+                id="respuesta_proveedor"
+                class="form-control"
+                rows="4"
+                placeholder="Escribí una respuesta para el cliente"
+            >{{ solicitud.respuesta_proveedor }}</textarea>
+        </div>
 
-            <div class="campo-formulario">
-                <label for="{{ respuesta_form.respuesta_proveedor.id_for_label }}">
-                    {{ respuesta_form.respuesta_proveedor.label }}
-                </label>
+        <div class="botones-respuesta">
+            <form
+                method="post"
+                action="{% url 'aceptar_solicitud' solicitud.id %}"
+                onsubmit="this.respuesta_proveedor.value = document.getElementById('respuesta_proveedor').value;"
+            >
+                {% csrf_token %}
+                <input type="hidden" name="respuesta_proveedor" value="">
 
-                {{ respuesta_form.respuesta_proveedor }}
-            </div>
-
-            <div class="botones-respuesta">
-
-                <button
-                    type="submit"
-                    formaction="{% url 'aceptar_solicitud' solicitud.id %}"
-                    class="btn-aceptar"
-                >
+                <button type="submit" class="btn-aceptar">
                     Aceptar solicitud
                 </button>
+            </form>
 
-                <button
-                    type="submit"
-                    formaction="{% url 'rechazar_solicitud' solicitud.id %}"
-                    class="btn-rechazar"
-                >
+            <form
+                method="post"
+                action="{% url 'rechazar_solicitud' solicitud.id %}"
+                onsubmit="this.respuesta_proveedor.value = document.getElementById('respuesta_proveedor').value;"
+            >
+                {% csrf_token %}
+                <input type="hidden" name="respuesta_proveedor" value="">
+
+                <button type="submit" class="btn-rechazar">
                     Rechazar solicitud
                 </button>
-
-            </div>
-
-        </form>
-
+            </form>
+        </div>
     </section>
 
 {% endif %}
