@@ -9,7 +9,7 @@
         <a href="{% url 'lista_proyectos' %}">Galería</a>
 
         {% if user.is_authenticated %}
-            <a href="{% url 'perfil' %}" class="nav-link">Mi Perfil</a>
+            <a href="{% url 'perfil' %}" class="nav-link">Mi Espacio</a>
 
             <img src="{{ user.imagen_perfil.url }}"
                  class="foto-perfil"
