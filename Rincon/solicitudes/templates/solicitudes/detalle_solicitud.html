@@ -1,20 +1,11 @@
 {% load static %}
 
-{% block content %}
-
-<link
-    rel="stylesheet"
-    href="{% static 'solicitudes/css/solicitudes.css' %}"
->
-<link
-    rel="stylesheet"
-    href="{% static 'solicitudes/css/solicitudes_mejoras.css' %}"
->
+<link rel="stylesheet" href="{% static 'solicitudes/css/solicitudes.css' %}">
+<link rel="stylesheet" href="{% static 'solicitudes/css/solicitudes_mejoras.css' %}">
 
 {% include "website/navbar.html" %}
 
 <main class="solicitud-page">
-
     <section class="detalle-solicitud-card">
 
         <div class="detalle-encabezado">
@@ -41,7 +32,15 @@
         <div class="datos-solicitud">
             <div class="dato">
                 <span>Cliente</span>
-                <strong>{{ solicitud.cliente.username }}</strong>
+                {% if user.is_staff %}
+                    <strong>
+                        <a class="enlace-cliente" href="{% url 'detalle_cliente' solicitud.cliente.id %}">
+                            {{ solicitud.cliente.get_full_name|default:solicitud.cliente.username }}
+                        </a>
+                    </strong>
+                {% else %}
+                    <strong>{{ solicitud.cliente.get_full_name|default:solicitud.cliente.username }}</strong>
+                {% endif %}
             </div>
 
             <div class="dato">
@@ -85,7 +84,6 @@
         {% endif %}
 
         {% if user.is_staff and solicitud.estado == "pendiente" %}
-
             <section class="acciones-proveedor">
                 <h2>Responder solicitud</h2>
                 <p class="texto-ayuda">
@@ -93,10 +91,7 @@
                 </p>
 
                 <div class="campo-formulario">
-                    <label for="respuesta_proveedor">
-                        Respuesta al cliente
-                    </label>
-
+                    <label for="respuesta_proveedor">Respuesta al cliente</label>
                     <textarea
                         id="respuesta_proveedor"
                         class="form-control"
@@ -113,10 +108,7 @@
                     >
                         {% csrf_token %}
                         <input type="hidden" name="respuesta_proveedor" value="">
-
-                        <button type="submit" class="btn-aceptar">
-                            Aceptar solicitud
-                        </button>
+                        <button type="submit" class="btn-aceptar">Aceptar solicitud</button>
                     </form>
 
                     <form
@@ -126,18 +118,37 @@
                     >
                         {% csrf_token %}
                         <input type="hidden" name="respuesta_proveedor" value="">
-
-                        <button type="submit" class="btn-rechazar">
-                            Rechazar solicitud
-                        </button>
+                        <button type="submit" class="btn-rechazar">Rechazar solicitud</button>
                     </form>
                 </div>
             </section>
 
+        {% elif user.is_staff and solicitud.estado == "confirmada" %}
+            <section class="acciones-proveedor cierre-servicio">
+                <h2>Comenzar el trabajo</h2>
+                <p class="texto-ayuda">
+                    El cliente confirmó el servicio. Marcá el inicio para dejar registrado que el trabajo comenzó.
+                </p>
+                <form method="post" action="{% url 'iniciar_servicio' solicitud.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-aceptar">Marcar como en proceso</button>
+                </form>
+            </section>
+
+        {% elif user.is_staff and solicitud.estado == "en_proceso" %}
+            <section class="acciones-proveedor cierre-servicio">
+                <h2>Cerrar servicio</h2>
+                <p class="texto-ayuda">
+                    Usá esta opción cuando el trabajo haya terminado. La solicitud quedará guardada en el historial del cliente.
+                </p>
+                <form method="post" action="{% url 'finalizar_servicio' solicitud.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-finalizar">Marcar como finalizado</button>
+                </form>
+            </section>
+
         {% elif not user.is_staff and solicitud.cliente == user %}
-
             {% if solicitud.estado == "aceptada_proveedor" %}
-
                 <section class="confirmacion-cliente">
                     <h2>Confirmar servicio</h2>
                     <p>
@@ -147,65 +158,56 @@
                     <div class="botones-confirmacion">
                         <form method="post" action="{% url 'confirmar_solicitud' solicitud.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn-confirmar">
-                                Confirmar servicio
-                            </button>
+                            <button type="submit" class="btn-confirmar">Confirmar servicio</button>
                         </form>
 
                         <form method="post" action="{% url 'cancelar_solicitud' solicitud.id %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn-cancelar">
-                                Cancelar solicitud
-                            </button>
+                            <button type="submit" class="btn-cancelar">Cancelar solicitud</button>
                         </form>
                     </div>
                 </section>
 
             {% elif solicitud.estado == "pendiente" %}
-
                 <section class="confirmacion-cliente">
                     <p>La solicitud todavía está pendiente de revisión.</p>
-
                     <form method="post" action="{% url 'cancelar_solicitud' solicitud.id %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn-cancelar">
-                            Cancelar solicitud
-                        </button>
+                        <button type="submit" class="btn-cancelar">Cancelar solicitud</button>
                     </form>
                 </section>
-
             {% endif %}
-
         {% endif %}
 
         {% if solicitud.estado == "rechazada" %}
             <div class="estado-aviso estado-aviso-rechazada">
-                Esta solicitud fue rechazada. Los datos y la respuesta quedan guardados para poder consultarlos sin que la página se rompa.
+                Esta solicitud fue rechazada. La información y la respuesta del proveedor quedan guardadas en el historial.
             </div>
         {% elif solicitud.estado == "cancelada" %}
             <div class="estado-aviso estado-aviso-cancelada">
                 Esta solicitud fue cancelada y ya no admite nuevas acciones.
             </div>
-        {% elif solicitud.estado == "confirmada" or solicitud.estado == "en_proceso" or solicitud.estado == "finalizada" %}
-            <div class="estado-aviso estado-aviso-{{ solicitud.estado }}">
-                Estado actual: {{ solicitud.get_estado_display }}.
+        {% elif solicitud.estado == "confirmada" %}
+            <div class="estado-aviso estado-aviso-confirmada">
+                El cliente confirmó el servicio. Falta que el proveedor registre el inicio del trabajo.
+            </div>
+        {% elif solicitud.estado == "en_proceso" %}
+            <div class="estado-aviso estado-aviso-en_proceso">
+                El servicio está en proceso.
+            </div>
+        {% elif solicitud.estado == "finalizada" %}
+            <div class="estado-aviso estado-aviso-finalizada">
+                Servicio finalizado. El trabajo quedó cerrado y registrado en el historial del cliente.
             </div>
         {% endif %}
 
         <div class="volver-panel">
             {% if user.is_staff %}
-                <a href="{% url 'solicitudes_proveedor' %}" class="btn-secundario">
-                    Volver al panel
-                </a>
+                <a href="{% url 'solicitudes_proveedor' %}" class="btn-secundario">Volver al panel</a>
             {% else %}
-                <a href="{% url 'perfil' %}" class="btn-secundario">
-                    Volver a mi perfil
-                </a>
+                <a href="{% url 'perfil' %}" class="btn-secundario">Volver a mi perfil</a>
             {% endif %}
         </div>
 
     </section>
-
 </main>
-
-{% endblock %}
