@@ -1,0 +1,111 @@
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'solicitudes/css/solicitudes.css' %}">
+<link rel="stylesheet" href="{% static 'solicitudes/css/solicitudes_mejoras.css' %}">
+
+{% include "website/navbar.html" %}
+
+<main class="solicitud-page">
+    <section class="ficha-cliente">
+
+        <header class="ficha-cliente-header">
+            <div class="avatar-cliente">
+                {% if cliente.imagen_perfil %}
+                    <img src="{{ cliente.imagen_perfil.url }}" alt="{{ cliente.username }}">
+                {% else %}
+                    <span>{{ cliente.username|first|upper }}</span>
+                {% endif %}
+            </div>
+
+            <div>
+                <span class="etiqueta">Ficha de cliente</span>
+                <h1>{{ cliente.get_full_name|default:cliente.username }}</h1>
+                <p>{{ cliente.email|default:"Sin correo registrado" }}</p>
+            </div>
+
+            <a href="{% url 'solicitudes_proveedor' %}" class="btn-secundario">
+                Volver al panel
+            </a>
+        </header>
+
+        <div class="resumen-cliente-grid">
+            <article>
+                <span>Total de solicitudes</span>
+                <strong>{{ resumen.total }}</strong>
+            </article>
+            <article>
+                <span>Activas</span>
+                <strong>{{ resumen.activas }}</strong>
+            </article>
+            <article>
+                <span>Finalizadas</span>
+                <strong>{{ resumen.finalizadas }}</strong>
+            </article>
+            <article>
+                <span>Canceladas o rechazadas</span>
+                <strong>{{ resumen.rechazadas_canceladas }}</strong>
+            </article>
+        </div>
+
+        <section class="preferencias-cliente-card">
+            <div class="seccion-titulo">
+                <span class="etiqueta">Información importante</span>
+                <h2>Preferencias del cliente</h2>
+            </div>
+
+            {% if preferencias %}
+                <div class="preferencias-cliente-grid">
+                    <div>
+                        <span>Estilo favorito</span>
+                        <strong>{{ preferencias.get_estilo_favorito_display }}</strong>
+                    </div>
+                    <div>
+                        <span>Colores preferidos</span>
+                        <strong>{{ preferencias.colores_preferidos }}</strong>
+                    </div>
+                    <div>
+                        <span>Presupuesto orientativo</span>
+                        <strong>${{ preferencias.presupuesto|floatformat:0 }}</strong>
+                    </div>
+                    <div>
+                        <span>Ambientes de interés</span>
+                        <strong>{{ preferencias.ambientes_interes }}</strong>
+                    </div>
+                </div>
+            {% else %}
+                <p class="sin-datos">Este cliente todavía no completó sus preferencias.</p>
+            {% endif %}
+        </section>
+
+        <section class="historial-cliente-card">
+            <div class="seccion-titulo">
+                <span class="etiqueta">Historial</span>
+                <h2>Solicitudes del cliente</h2>
+            </div>
+
+            <div class="historial-lista">
+                {% for solicitud in solicitudes %}
+                    <article class="historial-item">
+                        <div>
+                            <h3>{{ solicitud.proyecto.titulo }}</h3>
+                            <p>{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</p>
+                        </div>
+
+                        <span class="estado estado-{{ solicitud.estado }}">
+                            {{ solicitud.get_estado_display }}
+                        </span>
+
+                        <strong>${{ solicitud.presupuesto_cliente|floatformat:0 }}</strong>
+
+                        <a href="{% url 'detalle_solicitud' solicitud.id %}" class="btn-ver-solicitud">
+                            Ver
+                        </a>
+                    </article>
+                {% empty %}
+                    <p class="sin-datos">Este cliente todavía no tiene solicitudes.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+    </section>
+</main>
