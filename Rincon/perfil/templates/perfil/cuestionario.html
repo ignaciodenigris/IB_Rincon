@@ -1,22 +1,69 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rincon | Tus preferencias</title>
     <link rel="stylesheet" href="{% static 'perfil/css/cuestionario.css' %}">
-    <title>Cuestionario de gustos</title>
 </head>
-
 <body>
-    <h2>Contanos tus gustos</h2>
+    <main class="preferences-page">
+        <section class="preferences-intro">
+            <a class="preferences-brand" href="/">Rincon</a>
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
+            <div class="intro-content">
+                <span class="intro-kicker">Personalizá tu experiencia</span>
+                <h1>Contanos cómo imaginás tu espacio ideal.</h1>
+                <p>Usaremos estas respuestas para recomendarte proyectos más cercanos a tu estilo, presupuesto e intereses.</p>
 
-        <button type="submit">Guardar y continuar</button>
-    </form>
+                <div class="benefits-list">
+                    <div><span>01</span> Recomendaciones personalizadas</div>
+                    <div><span>02</span> Proyectos dentro de tu presupuesto</div>
+                    <div><span>03</span> Preferencias guardadas en tu perfil</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="preferences-panel">
+            <div class="preferences-card">
+                <span class="eyebrow">Cuestionario de gustos</span>
+                <h2>Tus preferencias</h2>
+                <p class="preferences-copy">Podés modificar esta información más adelante desde tu perfil.</p>
+
+                <form method="POST" class="preferences-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="form-errors">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="preference-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small>{{ field.help_text|safe }}</small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions">
+                        <a href="{% url 'perfil' %}" class="btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn-primary">Guardar y continuar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
 </body>
-
 </html>
