@@ -1,0 +1,83 @@
+.perfil-seccion {
+    margin-top: 52px;
+}
+
+.perfil-seccion-header {
+    margin-bottom: 22px;
+}
+
+.perfil-seccion-header h2 {
+    margin: 0 0 6px;
+    font-size: 1.55rem;
+    color: #222;
+}
+
+.perfil-seccion-header p {
+    margin: 0;
+    color: #6f6f6f;
+    font-size: 0.95rem;
+}
+
+.recomendaciones-section {
+    padding-top: 32px;
+    border-top: 1px solid #e7e3de;
+}
+
+.recomendaciones-section .proyectos-grid {
+    align-items: stretch;
+}
+
+.recomendacion-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.recomendacion-card .proyecto-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.recomendacion-card .motivos-recomendacion {
+    margin: 12px 0;
+    padding: 12px;
+    background: #f6f4f1;
+    border-radius: 10px;
+}
+
+.recomendacion-card .motivos-recomendacion ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.recomendacion-card .motivos-recomendacion li {
+    padding: 5px 8px;
+    font-size: 0.76rem;
+}
+
+.recomendacion-card .proyecto-precio {
+    margin-top: auto;
+}
+
+.card-botones form,
+.logout-form {
+    margin: 0;
+}
+
+.solicitudes-section {
+    padding-top: 32px;
+    border-top: 1px solid #e7e3de;
+}
+
+@media (max-width: 650px) {
+    .perfil-seccion {
+        margin-top: 38px;
+    }
+
+    .recomendaciones-section,
+    .solicitudes-section {
+        padding-top: 24px;
+    }
+}
