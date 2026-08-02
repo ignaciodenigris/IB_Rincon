@@ -11,9 +11,19 @@
         {% if user.is_authenticated %}
             <a href="{% url 'perfil' %}" class="nav-link">Mi Espacio</a>
 
-            <img src="{{ user.imagen_perfil.url }}"
-                 class="foto-perfil"
-                 alt="Foto de perfil">
+            {% if user.imagen_perfil and user.imagen_perfil.name != 'default.jpg' %}
+                <img
+                    src="{{ user.imagen_perfil.url }}"
+                    class="foto-perfil"
+                    alt="Foto de perfil de {{ user.username }}"
+                >
+            {% else %}
+                <img
+                    src="{% static 'website/img/default_profile.svg' %}"
+                    class="foto-perfil"
+                    alt="Imagen de perfil predeterminada"
+                >
+            {% endif %}
         {% else %}
             <a href="{% url 'cuentas:registro' %}">Registrarse</a>
             <a href="{% url 'cuentas:login' %}">Iniciar sesión</a>
