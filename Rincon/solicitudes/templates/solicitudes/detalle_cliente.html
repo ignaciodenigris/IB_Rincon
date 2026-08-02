@@ -10,10 +10,13 @@
 
         <header class="ficha-cliente-header">
             <div class="avatar-cliente">
-                {% if cliente.imagen_perfil %}
+                {% if cliente.imagen_perfil and cliente.imagen_perfil.name != 'default.jpg' %}
                     <img src="{{ cliente.imagen_perfil.url }}" alt="{{ cliente.username }}">
                 {% else %}
-                    <span>{{ cliente.username|first|upper }}</span>
+                    <img
+                        src="{% static 'website/img/default_profile.svg' %}"
+                        alt="Imagen de perfil predeterminada"
+                    >
                 {% endif %}
             </div>
 
