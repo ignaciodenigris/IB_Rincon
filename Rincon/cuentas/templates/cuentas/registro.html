@@ -1,53 +1,64 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rincon | Registrarse</title>
     <link rel="stylesheet" href="{% static 'cuentas/css/registro.css' %}">
-    <title>Rincon | Registrate</title>
 </head>
-
 <body>
+    <main class="register-page">
+        <section class="register-intro">
+            <a class="register-brand" href="/">Rincon</a>
+            <div>
+                <span class="register-kicker">Tu espacio, tus preferencias</span>
+                <h1>Creá una cuenta y descubrí proyectos pensados para vos.</h1>
+                <p>Guardá ideas, completá tus gustos y enviá solicitudes de servicio desde un único lugar.</p>
+            </div>
+        </section>
 
-    <div class="registro-container">
-        <div class="registro-box">
+        <section class="register-panel">
+            <div class="register-card">
+                <span class="eyebrow">Nuevo cliente</span>
+                <h2>Crear cuenta</h2>
+                <p class="register-copy">Completá tus datos para empezar a usar Rincon.</p>
 
-            <h2>Crear Cuenta</h2>
+                <form method="POST" class="register-form">
+                    {% csrf_token %}
 
-            <form method="POST">
-                {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <div class="form-errors">
+                            {% for error in form.non_field_errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
 
-                <!-- Renderizamos campo por campo para poder estilizarlo mejor -->
-                {% if form.non_field_errors %}
-                <div class="form-errors">
-                    {% for error in form.non_field_errors %}
-                        <p style="color: red; font-size: 13px;">{{ error }}</p>
+                    {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small class="help-text">{{ field.help_text|safe }}</small>
+                            {% endif %}
+
+                            {% for error in field.errors %}
+                                <p class="field-error">{{ error }}</p>
+                            {% endfor %}
+                        </div>
                     {% endfor %}
-                </div>
-                {% endif %}
-                {% for field in form %}
-                <div class="form-group">
-                    <label>{{ field.label }}</label>
-                    {{ field }}
-                    <!-- errores por campo -->
-                    {% for error in field.errors %}
-                        <p style="color: red; font-size: 13px;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                {% endfor %}
 
-                <button class="btn-registrarse" type="submit">Registrarme</button>
-            </form>
+                    <button class="btn-register" type="submit">Crear mi cuenta</button>
+                </form>
 
-            <p class="registro-texto">¿Ya tenés cuenta?
-                
-            </p>
-
-        </div>
-    </div>
-
+                <p class="register-switch">
+                    ¿Ya tenés cuenta?
+                    <a href="{% url 'cuentas:login' %}">Iniciar sesión</a>
+                </p>
+            </div>
+        </section>
+    </main>
 </body>
-
 </html>
