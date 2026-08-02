@@ -2,59 +2,44 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from herramientas.models import Proyecto
-from .forms import PreferenciasForm
-from .models import Preferencias
 from solicitudes.models import SolicitudServicio
 
-
+from .forms import PreferenciasForm
+from .models import Preferencias
 
 
 @login_required
 def cuestionario(request):
-    preferencias = Preferencias.objects.filter(
-        usuario=request.user
-    ).first()
+    preferencias = Preferencias.objects.filter(usuario=request.user).first()
 
     if request.method == "POST":
-        form = PreferenciasForm(
-            request.POST,
-            instance=preferencias
-        )
+        form = PreferenciasForm(request.POST, instance=preferencias)
 
         if form.is_valid():
             nuevas_preferencias = form.save(commit=False)
             nuevas_preferencias.usuario = request.user
             nuevas_preferencias.save()
-
             return redirect("perfil")
     else:
         form = PreferenciasForm(instance=preferencias)
 
-    return render(request, "perfil/cuestionario.html", {
-        "form": form
-    })
+    return render(request, "perfil/cuestionario.html", {"form": form})
 
 
 @login_required
 def perfil(request):
-    preferencias = Preferencias.objects.filter(
-        usuario=request.user
-    ).first()
+    preferencias = Preferencias.objects.filter(usuario=request.user).first()
 
-    proyectos_guardados = Proyecto.objects.filter(
-        favoritos=request.user
-    )
+    proyectos_guardados = Proyecto.objects.filter(favoritos=request.user)
 
     solicitudes_cliente = SolicitudServicio.objects.filter(
-    cliente=request.user
+        cliente=request.user
     ).select_related("proyecto")
 
     recomendaciones = []
 
     if preferencias:
-        proyectos = Proyecto.objects.exclude(
-            favoritos=request.user
-        )
+        proyectos = Proyecto.objects.exclude(favoritos=request.user)
 
         colores_usuario = [
             color.strip().lower()
@@ -75,7 +60,6 @@ def perfil(request):
             subtitulo = (proyecto.subtitulo or "").lower()
             descripcion = (proyecto.descripcion or "").lower()
             categoria = (proyecto.categoria or "").lower()
-
             texto_proyecto = f"{subtitulo} {descripcion} {categoria}"
 
             if (
@@ -89,10 +73,7 @@ def perfil(request):
                 puntaje += 4
                 motivos.append("Ambiente de interés")
 
-            if any(
-                color in texto_proyecto
-                for color in colores_usuario
-            ):
+            if any(color in texto_proyecto for color in colores_usuario):
                 puntaje += 2
                 motivos.append("Colores preferidos")
 
@@ -103,7 +84,8 @@ def perfil(request):
                 puntaje += 3
                 motivos.append("Dentro de tu presupuesto")
 
-            if puntaje > 0:
+            # Solo se muestran coincidencias relevantes.
+            if puntaje >= 3:
                 recomendaciones.append({
                     "proyecto": proyecto,
                     "puntaje": puntaje,
@@ -112,7 +94,7 @@ def perfil(request):
 
         recomendaciones.sort(
             key=lambda recomendacion: recomendacion["puntaje"],
-            reverse=True
+            reverse=True,
         )
 
     return render(request, "perfil/perfil.html", {
@@ -121,4 +103,3 @@ def perfil(request):
         "proyectos_guardados": proyectos_guardados,
         "solicitudes_cliente": solicitudes_cliente,
     })
-
