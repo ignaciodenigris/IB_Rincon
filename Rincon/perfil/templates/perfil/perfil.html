@@ -1,20 +1,18 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'perfil/css/perfil.css' %}">
+<link rel="stylesheet" href="{% static 'perfil/css/perfil_ajustes.css' %}">
 {% include "website/navbar.html" %}
-<div class="perfil-container">
- 
-    <!-- Header: avatar + saludo -->
-    <div class="perfil-header-row">
+
+<main class="perfil-container">
+    <section class="perfil-header-row">
         <div class="perfil-avatar-wrap">
-            {% if user.is_authenticated %}
-                {% if user.foto_perfil %}
-                    <img src="{{ user.foto_perfil.url }}" alt="{{ user.username }}" class="perfil-avatar">
-                {% elif user.imagen_perfil %}
-                    <img src="{{ user.imagen_perfil.url }}" alt="{{ user.username }}" class="perfil-avatar">
-                {% else %}
-                    <img src="{% static 'perfil/images/default_profile.png' %}" alt="default" class="perfil-avatar">
-                {% endif %}
+            {% if user.foto_perfil %}
+                <img src="{{ user.foto_perfil.url }}" alt="{{ user.username }}" class="perfil-avatar">
+            {% elif user.imagen_perfil %}
+                <img src="{{ user.imagen_perfil.url }}" alt="{{ user.username }}" class="perfil-avatar">
+            {% else %}
+                <img src="{% static 'perfil/images/default_profile.png' %}" alt="Foto de perfil predeterminada" class="perfil-avatar">
             {% endif %}
         </div>
 
@@ -22,279 +20,177 @@
             <h1>Hola, {{ request.user.username }}</h1>
             <p>Este es tu espacio personal dentro de Rincon.</p>
         </div>
-    </div>
+    </section>
 
-    <!-- Caja de configuraciones dividida -->
-    <div class="foto-box">
+    <section class="foto-box">
         <h2>Configuraciones</h2>
         <div class="foto-box-inner config-grid">
             <div class="config-section">
                 <h3>Cuenta</h3>
-                    <div class="action-list">
-                    <a href="{% url 'cuentas:actualizar_foto' %}" class="action-btn action-btn--small btn-negro">Cambiar foto de perfil</a>
-                    <a href="{% url 'mensajeria' %}" class="action-btn action-btn--xsmall btn-negro">Mensajería</a>
-                    <form class="logout-form" action="{% url 'logout' %}" method="post" style="width:100%;">
+                <div class="action-list">
+                    <a href="{% url 'cuentas:actualizar_foto' %}" class="action-btn btn-negro">Cambiar foto de perfil</a>
+                    <a href="{% url 'mensajeria' %}" class="action-btn btn-negro">Mensajería</a>
+                    <form class="logout-form" action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
                         <button class="action-btn btn-negro" type="submit">Cerrar sesión</button>
                     </form>
                 </div>
             </div>
 
-            <div class="admin-tools">
-                {% if user.is_staff %}
+            {% if user.is_staff %}
+                <div class="admin-tools">
                     <h3>Herramientas</h3>
                     <div class="tools-buttons">
                         <a class="action-btn btn-negro" href="{% url 'crear_herramienta' %}">Proyectos</a>
                         <a class="action-btn btn-negro" href="{% url 'proyectos_populares' %}">Tendencias</a>
-                        <a class="action-btn btn-negro btn-panel-control" href="{% url 'solicitudes_proveedor' %}">
-                            Ver panel de control
-                        </a>
+                        <a class="action-btn btn-negro" href="{% url 'solicitudes_proveedor' %}">Ver panel de control</a>
                     </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <!-- Preferencias -->
-    {% if preferencias %}
-    <div class="preferencias-box">
-        <h2>Tus Preferencias</h2>
-
-        <ul>
-            <li><strong>Estilo favorito:</strong> {{ preferencias.estilo_favorito }}</li>
-            <li><strong>Colores:</strong> {{ preferencias.colores_preferidos }}</li>
-            <li><strong>Presupuesto:</strong> ${{ preferencias.presupuesto }}</li>
-            <li><strong>Ambientes de interés:</strong> {{ preferencias.ambientes_interes }}</li>
-        </ul>
-
-        <div class="preferencias-actions">
-            <a href="{% url 'cuestionario' %}" class="btn-editar-pref">Editar preferencias</a>
-        </div>
-    </div>
-    {% else %}
-        <p>No completaste tu perfil aún.</p>
-        <a href="{% url 'cuestionario' %}" class="btn-completar">Completar cuestionario</a>
-        
-    {% endif %}
-    
-    <h2>Proyectos guardados</h2>
-
-    {% if proyectos_guardados %}
-    <div class="proyectos-grid">
-        {% for proyecto in proyectos_guardados %}
-        <div class="proyecto-card">
-            <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
-            <div class="proyecto-info">
-                <h3>{{ proyecto.titulo }}</h3>
-                {% if proyecto.subtitulo %}<h4>{{ proyecto.subtitulo }}</h4>{% endif %}
-                <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
-
-                <div class="proyecto-precio">${{ proyecto.precio }}</div>
-
-                <div class="card-botones">
-                    <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver btn-negro">Ver</a>
-
-                    <form action="{% url 'toggle_favorito' proyecto.id %}" method="post" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-fav" aria-pressed="true">
-                            <span class="heart">♥</span>
-                            <span class="fav-text">Quitar</span>
-                        </button>
-                    </form>
                 </div>
-            </div>
+            {% endif %}
         </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <p>No guardaste proyectos todavía.</p>
-    {% endif %}
-<div class="recomendaciones-section">
-    <div class="recomendaciones-header">
-        <div>
-            <h2>Recomendaciones para vos</h2>
-            <p>Seleccionadas según tus preferencias, ambientes y presupuesto.</p>
+    </section>
+
+    <section class="preferencias-box">
+        <h2>Tus preferencias</h2>
+        {% if preferencias %}
+            <ul>
+                <li><strong>Estilo favorito:</strong> {{ preferencias.estilo_favorito }}</li>
+                <li><strong>Colores:</strong> {{ preferencias.colores_preferidos }}</li>
+                <li><strong>Presupuesto:</strong> ${{ preferencias.presupuesto }}</li>
+                <li><strong>Ambientes de interés:</strong> {{ preferencias.ambientes_interes }}</li>
+            </ul>
+            <a href="{% url 'cuestionario' %}" class="btn-editar-pref">Editar preferencias</a>
+        {% else %}
+            <p>No completaste tus preferencias todavía.</p>
+            <a href="{% url 'cuestionario' %}" class="btn-completar">Completar cuestionario</a>
+        {% endif %}
+    </section>
+
+    <section class="perfil-seccion">
+        <div class="perfil-seccion-header">
+            <h2>Proyectos guardados</h2>
+            <p>Los proyectos que elegiste como favoritos.</p>
         </div>
-    </div>
 
-    {% if recomendaciones %}
-        <div class="proyectos-grid">
-            {% for recomendacion in recomendaciones %}
-
-                <div class="proyecto-card recomendacion-card">
-
-                    <div class="recomendacion-imagen">
-                        <img
-                            src="{{ recomendacion.proyecto.imagen.url }}"
-                            alt="{{ recomendacion.proyecto.titulo }}"
-                        >
-
-                        <span class="coincidencia-badge">
-                            {{ recomendacion.puntaje }} puntos
-                        </span>
-                    </div>
-
-                    <div class="proyecto-info">
-
-                        <h3>{{ recomendacion.proyecto.titulo }}</h3>
-
-                        {% if recomendacion.proyecto.subtitulo %}
-                            <h4>{{ recomendacion.proyecto.subtitulo }}</h4>
-                        {% endif %}
-
-                        <p>
-                            {{ recomendacion.proyecto.descripcion|truncatewords:15 }}
-                        </p>
-
-                        {% if recomendacion.motivos %}
-                            <div class="motivos-recomendacion">
-                                <span>Coincide con:</span>
-
-                                <ul>
-                                    {% for motivo in recomendacion.motivos %}
-                                        <li>{{ motivo }}</li>
-                                    {% endfor %}
-                                </ul>
+        {% if proyectos_guardados %}
+            <div class="proyectos-grid">
+                {% for proyecto in proyectos_guardados %}
+                    <article class="proyecto-card">
+                        <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.titulo }}">
+                        <div class="proyecto-info">
+                            <h3>{{ proyecto.titulo }}</h3>
+                            {% if proyecto.subtitulo %}<h4>{{ proyecto.subtitulo }}</h4>{% endif %}
+                            <p>{{ proyecto.descripcion|truncatewords:15 }}</p>
+                            <div class="proyecto-precio">${{ proyecto.precio }}</div>
+                            <div class="card-botones">
+                                <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-ver btn-negro">Ver</a>
+                                <form action="{% url 'toggle_favorito' proyecto.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-fav" aria-pressed="true">
+                                        <span class="heart">♥</span>
+                                        <span class="fav-text">Quitar</span>
+                                    </button>
+                                </form>
                             </div>
-                        {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-text">No guardaste proyectos todavía.</p>
+        {% endif %}
+    </section>
 
-                        <div class="proyecto-precio">
-                            ${{ recomendacion.proyecto.precio }}
+    <section class="perfil-seccion recomendaciones-section">
+        <div class="perfil-seccion-header">
+            <h2>Recomendaciones para vos</h2>
+            <p>Solo mostramos proyectos con una coincidencia mínima de 3 puntos.</p>
+        </div>
+
+        {% if recomendaciones %}
+            <div class="proyectos-grid">
+                {% for recomendacion in recomendaciones %}
+                    <article class="proyecto-card recomendacion-card">
+                        <div class="recomendacion-imagen">
+                            <img src="{{ recomendacion.proyecto.imagen.url }}" alt="{{ recomendacion.proyecto.titulo }}">
+                            <span class="coincidencia-badge">{{ recomendacion.puntaje }} puntos</span>
                         </div>
 
-                        <div class="card-botones">
+                        <div class="proyecto-info">
+                            <h3>{{ recomendacion.proyecto.titulo }}</h3>
+                            {% if recomendacion.proyecto.subtitulo %}
+                                <h4>{{ recomendacion.proyecto.subtitulo }}</h4>
+                            {% endif %}
+                            <p>{{ recomendacion.proyecto.descripcion|truncatewords:15 }}</p>
 
-                            <a
-                                href="{% url 'detalle_proyecto' recomendacion.proyecto.id %}"
-                                class="btn-ver btn-negro"
-                            >
-                                Ver proyecto
-                            </a>
+                            {% if recomendacion.motivos %}
+                                <div class="motivos-recomendacion">
+                                    <span>Coincide con</span>
+                                    <ul>
+                                        {% for motivo in recomendacion.motivos %}
+                                            <li>{{ motivo }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
 
-                            {% if user.is_authenticated %}
-                                <form
-                                    action="{% url 'toggle_favorito' recomendacion.proyecto.id %}"
-                                    method="post"
-                                >
+                            <div class="proyecto-precio">${{ recomendacion.proyecto.precio }}</div>
+                            <div class="card-botones">
+                                <a href="{% url 'detalle_proyecto' recomendacion.proyecto.id %}" class="btn-ver btn-negro">Ver proyecto</a>
+                                <form action="{% url 'toggle_favorito' recomendacion.proyecto.id %}" method="post">
                                     {% csrf_token %}
-
-                                    <button
-                                        type="submit"
-                                        class="btn-fav"
-                                        aria-label="Guardar proyecto"
-                                    >
+                                    <button type="submit" class="btn-fav" aria-label="Guardar proyecto">
                                         <span class="heart">♡</span>
                                         <span class="fav-text">Guardar</span>
                                     </button>
                                 </form>
-                            {% endif %}
-
+                            </div>
                         </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="sin-recomendaciones">
+                <h3>No encontramos coincidencias suficientes</h3>
+                <p>Editá tus preferencias para recibir nuevas recomendaciones.</p>
+                <a href="{% url 'cuestionario' %}" class="btn-editar-pref">Editar preferencias</a>
+            </div>
+        {% endif %}
+    </section>
 
+    <section class="perfil-seccion solicitudes-section">
+        <div class="perfil-seccion-header">
+            <h2>Mis solicitudes</h2>
+            <p>Consultá el estado de los servicios que solicitaste.</p>
+        </div>
+
+        <div class="solicitudes-grid">
+            {% for solicitud in solicitudes_cliente %}
+                <article class="solicitud-card">
+                    {% if solicitud.proyecto.imagen %}
+                        <img src="{{ solicitud.proyecto.imagen.url }}" alt="{{ solicitud.proyecto.titulo }}">
+                    {% endif %}
+                    <div class="solicitud-contenido">
+                        <div class="solicitud-superior">
+                            <span class="estado estado-{{ solicitud.estado }}">{{ solicitud.get_estado_display }}</span>
+                            <span class="fecha-solicitud">{{ solicitud.fecha_solicitud|date:"d/m/Y" }}</span>
+                        </div>
+                        <h3>{{ solicitud.proyecto.titulo }}</h3>
+                        <p>Presupuesto: <strong>${{ solicitud.presupuesto_cliente|floatformat:0 }}</strong></p>
+                        {% if solicitud.fecha_estimada %}
+                            <p>Fecha aproximada: {{ solicitud.fecha_estimada|date:"d/m/Y" }}</p>
+                        {% endif %}
+                        <a href="{% url 'detalle_solicitud' solicitud.id %}" class="btn-ver-solicitud">Ver solicitud</a>
                     </div>
+                </article>
+            {% empty %}
+                <div class="sin-solicitudes">
+                    <h3>Todavía no realizaste solicitudes</h3>
+                    <p>Cuando solicites un servicio, vas a poder seguir su estado desde acá.</p>
+                    <a href="{% url 'lista_proyectos' %}">Explorar proyectos</a>
                 </div>
-
             {% endfor %}
         </div>
-
-    {% else %}
-        <div class="sin-recomendaciones">
-            <h3>No encontramos coincidencias todavía</h3>
-            <p>
-                Podés editar tus preferencias para recibir nuevas recomendaciones.
-            </p>
-
-            <a href="{% url 'cuestionario' %}" class="btn-editar-pref">
-                Editar preferencias
-            </a>
-        </div>
-    {% endif %}
-</div>
-<section class="solicitudes-section">
-
-    <div class="section-header">
-        <div>
-            <span class="section-number">03</span>
-            <h2>Mis solicitudes</h2>
-        </div>
-
-        <p>
-            Consultá el estado de los servicios que solicitaste.
-        </p>
-    </div>
-
-    <div class="solicitudes-grid">
-
-        {% for solicitud in solicitudes_cliente %}
-
-            <article class="solicitud-card">
-
-                {% if solicitud.proyecto.imagen %}
-                    <img
-                        src="{{ solicitud.proyecto.imagen.url }}"
-                        alt="{{ solicitud.proyecto.titulo }}"
-                    >
-                {% endif %}
-
-                <div class="solicitud-contenido">
-
-                    <div class="solicitud-superior">
-
-                        <span class="estado estado-{{ solicitud.estado }}">
-                            {{ solicitud.get_estado_display }}
-                        </span>
-
-                        <span class="fecha-solicitud">
-                            {{ solicitud.fecha_solicitud|date:"d/m/Y" }}
-                        </span>
-
-                    </div>
-
-                    <h3>{{ solicitud.proyecto.titulo }}</h3>
-
-                    <p>
-                        Presupuesto:
-                        <strong>
-                            ${{ solicitud.presupuesto_cliente|floatformat:0 }}
-                        </strong>
-                    </p>
-
-                    {% if solicitud.fecha_estimada %}
-                        <p>
-                            Fecha aproximada:
-                            {{ solicitud.fecha_estimada|date:"d/m/Y" }}
-                        </p>
-                    {% endif %}
-
-                    <a
-                        href="{% url 'detalle_solicitud' solicitud.id %}"
-                        class="btn-ver-solicitud"
-                    >
-                        Ver solicitud
-                    </a>
-
-                </div>
-
-            </article>
-
-        {% empty %}
-
-            <div class="sin-solicitudes">
-                <h3>Todavía no realizaste solicitudes</h3>
-
-                <p>
-                    Cuando solicites un servicio, vas a poder seguir
-                    su estado desde acá.
-                </p>
-
-                <a href="{% url 'lista_proyectos' %}">
-                    Explorar proyectos
-                </a>
-            </div>
-
-        {% endfor %}
-
-    </div>
-
-</section>
+    </section>
+</main>
 {% endblock %}
