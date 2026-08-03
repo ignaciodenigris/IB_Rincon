@@ -1,7 +1,61 @@
-<h2>Editando: {{ proyecto.titulo }}</h2>
+{% load static %}
+{% include "website/navbar.html" %}
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar cambios</button>
-</form>
+<link rel="stylesheet" href="{% static 'herramientas/css/editar_proyecto.css' %}">
+
+<main class="editar-proyecto-page">
+    <section class="editar-proyecto-card">
+        <div class="editar-proyecto-header">
+            <div>
+                <span class="editar-etiqueta">Administración de proyectos</span>
+                <h1>Editar proyecto</h1>
+                <p>Actualizá la información de <strong>{{ proyecto.titulo }}</strong>.</p>
+            </div>
+
+            {% if proyecto.imagen %}
+                <img
+                    src="{{ proyecto.imagen.url }}"
+                    alt="{{ proyecto.titulo }}"
+                    class="editar-proyecto-preview"
+                >
+            {% endif %}
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="editar-proyecto-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <small>{{ field.help_text }}</small>
+                    {% endif %}
+
+                    {% for error in field.errors %}
+                        <p class="field-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <div class="editar-acciones">
+                <button type="submit" class="btn-guardar-cambios">
+                    Guardar cambios
+                </button>
+
+                <a href="{% url 'detalle_proyecto' proyecto.id %}" class="btn-cancelar-edicion">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </section>
+</main>
